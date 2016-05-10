@@ -24,7 +24,7 @@ class User(db.Model):
     __tablename__ = "users"
 
     user_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    email = db.Column(db.String(64), nullable=False)
+    email = db.Column(db.String(64), unique=True, nullable=False)
     password = db.Column(db.String(64), nullable=True)
     fname = db.Column(db.String(35), nullable = False)
     lname = db.Column(db.String(35), nullable = False)
@@ -40,7 +40,7 @@ class User(db.Model):
     
 
 ##############################################################################
-# Trucks 
+# Truck
 
 class Truck(db.Model):
     """Truck profiles"""
@@ -61,13 +61,13 @@ class Truck(db.Model):
                 (self.truck_id, self.name, self.desc, self.yelp_link, self.web_link, self.twitter_handle) )
 
 ##############################################################################
-# food_categories
+# Food_Category
 
-class food_category(db.Model):
+class Food_Category(db.Model):
     """food categories that users and trucks will both reference through
         association tables"""
 
-    __tablename__ = "trucks"
+    __tablename__ = "food_categories"
 
     cat_id = db.Column(db.String(4), primary_key=True)
     name = db.Column(db.String(30), nullable = False)
@@ -80,6 +80,50 @@ class food_category(db.Model):
         return ("<Food Category cat_id: %s, name: %s, desc: %s >" %
                 (self.cat_id, self.name, self.desc) )
 
+##############################################################################
+# Schedule
+
+class Schedule(db.Model):
+    """Each truck can have many schedules in this table 
+        but a schedule can only have truck associated with it"""
+
+    __tablename__ = "schedules"
+
+    schedule_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    truck_id = db.Column(db.Integer, db.ForeignKey('Truck.truck_id'))
+    location_id = db.Column(db.Integer, db.ForeignKey('Location.location_id'))
+    date = db.Column(db.Date)
+    start_time = db.Column(db.Time)
+    end_time = db.Column(db.Time)
+
+    def __repr__(self):
+        """Provide helpful representation when printed."""
+
+        return ("<Schedule schedule_id: %s, truck_id: %s, location_id: %s, date: %s, start_time: %s, end_time: %s >" %
+                (self.schedule_id, self.truck_id, self.location_id, self.date, self.start_time, self.end_time) )
+
+##############################################################################
+# Location
+
+class Location(db.Model):
+    """food categories that users and trucks will both reference through
+        association tables"""
+
+    __tablename__ = "locations"
+
+    location_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    street_address = db.Column(db.String(50))
+    city = db.Column(db.String(20))
+    state = db.Column(db.String(2))
+    zipcode = db.Column(db.Integer)
+    longitude = db.Column(db.Integer)
+    lattitude = db.Column(db.Integer)
+
+    def __repr__(self):
+        """Provide helpful representation when printed."""
+
+        return ("<Location location_id: %s, street_address: %s, city: %s, state: %s, zipcode: %s, longitude: %s, lattitude: %s >" %
+                (self.location_id, self.street_address, self.city, self.state, self.zipcode, self.longitude, self.lattitude) )
 
 
 ##############################################################################
@@ -89,8 +133,9 @@ def connect_to_db(app):
     """Connect the database to our Flask app."""
 
     # Configure to use our PostgreSQL database
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///ratings'
-#    app.config['SQLALCHEMY_ECHO'] = True
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///followers'
+    #Toggle this for debug/not debug
+    app.config['SQLALCHEMY_ECHO'] = True
     db.app = app
     db.init_app(app)
 
