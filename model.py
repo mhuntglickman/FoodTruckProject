@@ -24,13 +24,22 @@ class User(db.Model):
     __tablename__ = "users"
 
     user_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    email = db.Column(db.String(64), unique=True, nullable=False)
-    password = db.Column(db.String(64), nullable=True)
-    fname = db.Column(db.String(35), nullable = False)
-    lname = db.Column(db.String(35), nullable = False)
+    email = db.Column(db.String(50), unique=True, nullable=False)
+    password = db.Column(db.String(30), nullable=True)
+    fname = db.Column(db.String(50), nullable = False)
+    lname = db.Column(db.String(50), nullable = False)
     phone = db.Column(db.Integer)
-    zipcode = db.Column(db.String(15), nullable=True)
+    zipcode = db.Column(db.Integer, nullable=True)
 
+    trucks = db.relationship("Truck",
+                             secondary="users_trucks",
+                             backref="users")
+    
+    users_foods = db.relationship("User_Food", 
+                                secondary="users_foods",
+                                backref="users")
+
+    
     def __repr__(self):
         """Provide helpful representation when printed."""
 
@@ -48,11 +57,15 @@ class Truck(db.Model):
     __tablename__ = "trucks"
 
     truck_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    name = db.Column(db.String(35), nullable = False)
+    name = db.Column(db.String(50), nullable = False)
     desc = db.Column(db.String(200), nullable=True)
     yelp_link = db.Column(db.String(100), nullable = False)
     web_link = db.Column(db.String(100), nullable = True)
-    twitter_handle = db.Column(db.String(100), nullable = False)
+    twitter_handle = db.Column(db.String(50), nullable = False)
+
+    food_categories = db.relationship("Food_Category",
+                             secondary="trucks_foods",
+                             backref="trucks")
 
     def __repr__(self):
         """Provide helpful representation when printed."""
@@ -90,11 +103,15 @@ class Schedule(db.Model):
     __tablename__ = "schedules"
 
     schedule_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    truck_id = db.Column(db.Integer, db.ForeignKey('Truck.truck_id'))
-    location_id = db.Column(db.Integer, db.ForeignKey('Location.location_id'))
-    date = db.Column(db.Date)
+    truck_id = db.Column(db.Integer, 
+                        db.ForeignKey('trucks.truck_id'),nullable=False)
+    location_id = db.Column(db.Integer, 
+                            db.ForeignKey('locations.location_id'),nullable=False)
+    day = db.Column(db.Date)
     start_time = db.Column(db.Time)
     end_time = db.Column(db.Time)
+    location = db.relationship('Location', backref='schedules')
+    truck = db.relationship('Truck', backref='schedules')
 
     def __repr__(self):
         """Provide helpful representation when printed."""
@@ -126,6 +143,47 @@ class Location(db.Model):
                 (self.location_id, self.street_address, self.city, self.state, self.zipcode, self.longitude, self.lattitude) )
 
 
+##############################################################################
+# Truck and Food Categories Association table 
+
+class Truck_Food(db.Model):
+    __tablename__ = 'trucks_foods'
+    id = db.Column(db.Integer, primary_key=True)
+    truck_id = db.Column(db.Integer,
+                        db.ForeignKey('trucks.truck_id'),
+                        nullable=False)
+    cat_id = db.Column(db.Integer,
+                         db.ForeignKey('food_categories.cat_id'),
+                         nullable=False)
+
+
+##############################################################################
+# User and Food Categories Association table 
+
+class User_Food(db.Model):
+    __tablename__ = 'users_foods'
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer,
+                        db.ForeignKey('users.user_id'),
+                        nullable=False)
+    cat_id = db.Column(db.Integer,
+                         db.ForeignKey('food_categories.cat_id'),
+                         nullable=False)
+
+
+
+##############################################################################
+# User and Truck Association table 
+
+class User_Truck(db.Model):
+    __tablename__ = 'users_trucks'
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer,
+                        db.ForeignKey('users.user_id'),
+                        nullable=False)
+    truck_id = db.Column(db.Integer,
+                         db.ForeignKey('trucks.truck_id'),
+                         nullable=False)
 ##############################################################################
 # Helper functions
 
