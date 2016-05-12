@@ -3,7 +3,7 @@ import heapq
 import time
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy_utils import PhoneNumber
-import correlation
+#import correlation
 
 # This is the connection to the PostgreSQL database; we're getting this through
 # the Flask-SQLAlchemy helper library. On this, we can find the `session`
@@ -31,11 +31,14 @@ class User(db.Model):
     phone = db.Column(db.Integer)
     zipcode = db.Column(db.Integer, nullable=True)
 
+
+    #association table reference between trucks and users
     trucks = db.relationship("Truck",
                              secondary="users_trucks",
                              backref="users")
-    
-    users_foods = db.relationship("User_Food", 
+
+    #association table reference between users and food categories
+    food_categories = db.relationship("Food_Category", 
                                 secondary="users_foods",
                                 backref="users")
 
@@ -46,7 +49,9 @@ class User(db.Model):
         return ("<User user_id: %s, email: %s, password: %s, fname: %s, lname: %s, phone: %s, zipcode: %s>" %
                 (self.user_id, self.email, self.password, self.fname, self.lname, self.phone, self.zipcode) )
 
-    
+  
+
+
 
 ##############################################################################
 # Truck
@@ -58,11 +63,18 @@ class Truck(db.Model):
 
     truck_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     name = db.Column(db.String(50), nullable = False)
-    desc = db.Column(db.String(200), nullable=True)
+    descrip = db.Column(db.String(200), nullable=True)
     yelp_link = db.Column(db.String(100), nullable = False)
     web_link = db.Column(db.String(100), nullable = True)
     twitter_handle = db.Column(db.String(50), nullable = False)
 
+
+    #association table reference to go between trucks and users
+    # users = db.relationship("User",
+    #                          secondary="users_trucks",
+    #                          backref="trucks")
+
+    #association table reference to go between trucks and food categories
     food_categories = db.relationship("Food_Category",
                              secondary="trucks_foods",
                              backref="trucks")
@@ -70,8 +82,10 @@ class Truck(db.Model):
     def __repr__(self):
         """Provide helpful representation when printed."""
 
-        return ("<Truck truck_id: %s, name: %s, desc: %s, yelp_link: %s, web_link: %s, twitter_handle: %s >" %
-                (self.truck_id, self.name, self.desc, self.yelp_link, self.web_link, self.twitter_handle) )
+        return ("<Truck truck_id: %s, name: %s, descrip: %s, yelp_link: %s, web_link: %s, twitter_handle: %s >" %
+                (self.truck_id, self.name, self.descrip, self.yelp_link, self.web_link, self.twitter_handle) )
+
+
 
 ##############################################################################
 # Food_Category
@@ -84,14 +98,16 @@ class Food_Category(db.Model):
 
     cat_id = db.Column(db.String(4), primary_key=True)
     name = db.Column(db.String(30), nullable = False)
-    desc = db.Column(db.String(200), nullable=True)
+    descrip = db.Column(db.String(200), nullable=True)
 
 
     def __repr__(self):
         """Provide helpful representation when printed."""
 
-        return ("<Food Category cat_id: %s, name: %s, desc: %s >" %
-                (self.cat_id, self.name, self.desc) )
+        return ("<Food Category cat_id: %s, name: %s, descrip: %s >" %
+                (self.cat_id, self.name, self.descrip))
+
+
 
 ##############################################################################
 # Schedule
@@ -110,7 +126,10 @@ class Schedule(db.Model):
     day = db.Column(db.Date)
     start_time = db.Column(db.Time)
     end_time = db.Column(db.Time)
+
+    #trace back reference for table <location>
     location = db.relationship('Location', backref='schedules')
+    #trace back reference for table <truck>
     truck = db.relationship('Truck', backref='schedules')
 
     def __repr__(self):
@@ -118,6 +137,8 @@ class Schedule(db.Model):
 
         return ("<Schedule schedule_id: %s, truck_id: %s, location_id: %s, date: %s, start_time: %s, end_time: %s >" %
                 (self.schedule_id, self.truck_id, self.location_id, self.date, self.start_time, self.end_time) )
+
+
 
 ##############################################################################
 # Location
@@ -143,6 +164,7 @@ class Location(db.Model):
                 (self.location_id, self.street_address, self.city, self.state, self.zipcode, self.longitude, self.lattitude) )
 
 
+
 ##############################################################################
 # Truck and Food Categories Association table 
 
@@ -152,9 +174,10 @@ class Truck_Food(db.Model):
     truck_id = db.Column(db.Integer,
                         db.ForeignKey('trucks.truck_id'),
                         nullable=False)
-    cat_id = db.Column(db.Integer,
+    cat_id = db.Column(db.String(4),
                          db.ForeignKey('food_categories.cat_id'),
                          nullable=False)
+
 
 
 ##############################################################################
@@ -166,7 +189,7 @@ class User_Food(db.Model):
     user_id = db.Column(db.Integer,
                         db.ForeignKey('users.user_id'),
                         nullable=False)
-    cat_id = db.Column(db.Integer,
+    cat_id = db.Column(db.String(4),
                          db.ForeignKey('food_categories.cat_id'),
                          nullable=False)
 
@@ -184,6 +207,8 @@ class User_Truck(db.Model):
     truck_id = db.Column(db.Integer,
                          db.ForeignKey('trucks.truck_id'),
                          nullable=False)
+
+
 ##############################################################################
 # Helper functions
 
@@ -205,3 +230,6 @@ if __name__ == "__main__":
     from server import app
     connect_to_db(app)
     print "Connected to DB."
+
+    # Create all tables
+    #db.create_all()
