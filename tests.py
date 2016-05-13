@@ -6,7 +6,7 @@ from model import db, example_data, connect_to_db
 
 
 class PartyTests(unittest.TestCase):
-    """Tests for my party site."""
+    """Tests for my FoodTruck site."""
 
     def setUp(self):
         self.client = app.test_client()
@@ -14,7 +14,7 @@ class PartyTests(unittest.TestCase):
 
     def test_homepage(self):
         result = self.client.get("/")
-        self.assertIn("board games, rainbows, and ice cream sundaes", result.data)
+        self.assertIn("FoodTruck Follower", result.data)
 
     def test_no_rsvp_yet(self):
         # FIXME: Add a test to show we see the RSVP form, but NOT the party details
@@ -22,12 +22,12 @@ class PartyTests(unittest.TestCase):
         self.assertNotIn("Party Details", result.data)
         self.assertIn("Please RSVP", result.data)
 
-    def test_rsvp(self):
-        result = self.client.post("/rsvp",
-                                  data={'name': "Jane", 'email': "jane@jane.com"},
-                                  follow_redirects=True)
-        # FIXME: Once we RSVP, we should see the party details, but not the RSVP form
-        self.assertIn("Party Details", result.data)
+    # def test_rsvp(self):
+    #     result = self.client.post("/rsvp",
+    #                               data={'name': "Made", 'email': "jane@jane.com"},
+    #                               follow_redirects=True)
+    #     # FIXME: Once we RSVP, we should see the party details, but not the RSVP form
+    #     self.assertIn("Party Details", result.data)
 
 
 class PartyTestsDatabase(unittest.TestCase):
@@ -36,16 +36,16 @@ class PartyTestsDatabase(unittest.TestCase):
     def setUp(self):
         """Stuff to do before every test."""
         app.config['TESTING'] = True
-        app.config['SECRET_KEY'] = 'key123'
+        app.config['SECRET_KEY'] = 'BooBooLah1234'
         self.client = app.test_client()
 
         with self.client as c:
             with c.session_transaction() as sess:
-                sess['RSVP'] = True
+                sess['user_id'] = True
         
 
         # Connect to test database (uncomment when testing database)
-        connect_to_db(app, "postgresql:///testdb")
+        connect_to_db(app, "postgresql:///`")
 
         # Create tables and add sample data (uncomment when testing database)
         db.create_all()

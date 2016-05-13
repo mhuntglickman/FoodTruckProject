@@ -28,8 +28,8 @@ class User(db.Model):
     password = db.Column(db.String(30), nullable=True)
     fname = db.Column(db.String(50), nullable = False)
     lname = db.Column(db.String(50), nullable = False)
-    phone = db.Column(db.Integer)
-    zipcode = db.Column(db.Integer, nullable=True)
+    phone = db.Column(db.String(10), nullable=True)
+    zipcode = db.Column(db.String(5), nullable=True)
 
 
     #association table reference between trucks and users
@@ -68,11 +68,6 @@ class Truck(db.Model):
     web_link = db.Column(db.String(100), nullable = True)
     twitter_handle = db.Column(db.String(50), nullable = False)
 
-
-    #association table reference to go between trucks and users
-    # users = db.relationship("User",
-    #                          secondary="users_trucks",
-    #                          backref="trucks")
 
     #association table reference to go between trucks and food categories
     food_categories = db.relationship("Food_Category",
@@ -136,7 +131,7 @@ class Schedule(db.Model):
         """Provide helpful representation when printed."""
 
         return ("<Schedule schedule_id: %s, truck_id: %s, location_id: %s, date: %s, start_time: %s, end_time: %s >" %
-                (self.schedule_id, self.truck_id, self.location_id, self.date, self.start_time, self.end_time) )
+                (self.schedule_id, self.truck_id, self.location_id, self.day, self.start_time, self.end_time) )
 
 
 
@@ -153,9 +148,9 @@ class Location(db.Model):
     street_address = db.Column(db.String(50))
     city = db.Column(db.String(20))
     state = db.Column(db.String(2))
-    zipcode = db.Column(db.Integer)
-    longitude = db.Column(db.Integer)
-    lattitude = db.Column(db.Integer)
+    zipcode = db.Column(db.String(5))
+    longitude = db.Column(db.Float)
+    lattitude = db.Column(db.Float)
 
     def __repr__(self):
         """Provide helpful representation when printed."""
@@ -170,7 +165,7 @@ class Location(db.Model):
 
 class Truck_Food(db.Model):
     __tablename__ = 'trucks_foods'
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     truck_id = db.Column(db.Integer,
                         db.ForeignKey('trucks.truck_id'),
                         nullable=False)
@@ -185,7 +180,7 @@ class Truck_Food(db.Model):
 
 class User_Food(db.Model):
     __tablename__ = 'users_foods'
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     user_id = db.Column(db.Integer,
                         db.ForeignKey('users.user_id'),
                         nullable=False)
@@ -200,7 +195,7 @@ class User_Food(db.Model):
 
 class User_Truck(db.Model):
     __tablename__ = 'users_trucks'
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     user_id = db.Column(db.Integer,
                         db.ForeignKey('users.user_id'),
                         nullable=False)
@@ -231,5 +226,8 @@ if __name__ == "__main__":
     connect_to_db(app)
     print "Connected to DB."
 
+    #Here to update any changes in schema
+    #alembic for migration of changes - Look it up later
+
     # Create all tables
-    #db.create_all()
+    # db.create_all()

@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block content %}
+<br>
+<div class="well spaced" style="width:97%">
+  <h2>{{ user.fname }} {{ user.lname }}</h2>
+
+  <b><p style="color:#9acd32">Email/Login: {{ user.email }}</p>  
+  <p style="color:#9acd32">Phone: {{ user.phone }}</p></b>
+following_trucks
+
+<h2>{{ user.fname }}'s FoodTrucks</h2>
+    <ul>
+      {% for item in user.trucks %}
+          <li>
+              <a href="/truck/{{ item.truck_id }}">
+                {{ item.name}})
+              </a>
+          </li>
+      {% endfor %}
+    </ul>
+
+{% endblock %}

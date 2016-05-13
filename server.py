@@ -4,7 +4,6 @@ from jinja2 import StrictUndefined
 
 from flask import Flask, render_template, request, flash, redirect, session
 from flask_debugtoolbar import DebugToolbarExtension
-
 from model import connect_to_db, db, User, Truck, Food_Category, Schedule, Location, Truck_Food, User_Food, User_Truck 
 
 
@@ -32,26 +31,36 @@ def register_form():
     return render_template("register_form.html")
 
 
-@app.route('/register', methods=['POST'])
+@app.route('/register-process', methods=['POST','GET'])
 def register_process():
     """Process registration."""
 
     # Get form variables
     email = request.form["email"]
     password = request.form["password"]
-    age = int(request.form["age"])
     fname = request.form["fname"]
     lname = request.form["lname"]
-    phone = request.form["phone_number"]
+    phone = request.form["phone"]
     zipcode = request.form["zipcode"]
 
-    # new_user = User(email=email, password=password, age=age, zipcode=zipcode)
 
-    # db.session.add(new_user)
-    # db.session.commit()
+    new_user = User(email=email, password=password, fname=fname, lname=lname, phone=phone, zipcode=zipcode)
+    
+    #Debug
+    # print '###############################'
+    # print '###############################'
+    # print (('email: %s, password: %s, fname: %s, lname: %s, phone: %s, zipcode: %s')%
+    #         (new_user.email, new_user.password, new_user.fname, new_user.lname, new_user.phone, new_user.zipcode))
+    # print '###############################'
+    # print '###############################'
 
-    # flash("User %s added." % email)
-    # return redirect("/users/%s" % new_user.user_id)
+
+    db.session.add(new_user)
+    db.session.commit()
+    session["current_user"] = new_user.user_id
+    flash("User %s added." % email)
+
+    return redirect("/users/%s" % new_user.user_id)
 
 
 @app.route('/login', methods=['GET'])
@@ -61,7 +70,7 @@ def login_form():
     return render_template("login_form.html")
 
 
-@app.route('/login', methods=['POST'])
+@app.route('/login-process', methods=['POST'])
 def login_process():
     """Process login."""
 
@@ -70,6 +79,9 @@ def login_process():
     password = request.form["password"]
 
     user = User.query.filter_by(email=email).first()
+    print "***********************************"
+    print user
+    print user.trucks
 
     if not user:
         flash("No such user")
@@ -82,6 +94,15 @@ def login_process():
     session["user_id"] = user.user_id
 
     flash("Logged in")
+
+    # Creates a walk through set of object from the user to the trucks
+    # that they follow
+    # User -> User_Truck -> Truck
+    # This information needs to be passed through to the jinja template
+    # where it will be formatted into a set of clickable links.
+    # 5/12
+    
+
     return redirect("/users/%s" % user.user_id)
 
 
@@ -94,13 +115,13 @@ def logout():
     return redirect("/")
 
 
-# Not ready for this route yet.
-# @app.route("/users/<int:user_id>")
-# def user_detail(user_id):
-#     """Show info about user."""
+#dynamic route to display the new user
+@app.route("/users/<int:user_id>")
+def user_detail(user_id):
+    """Show info about user."""
 
-#     user = User.query.get(user_id)
-#     return render_template("user.html", user=user)
+    user = User.query.get(user_id)
+    return render_template("user.html", user=user)
 
 
 # Not ready for this route yet.
