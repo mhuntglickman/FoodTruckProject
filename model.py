@@ -67,7 +67,7 @@ class Truck(db.Model):
     yelp_link = db.Column(db.String(100), nullable = False)
     web_link = db.Column(db.String(100), nullable = True)
     twitter_handle = db.Column(db.String(50), nullable = False)
-
+    widget_id = db.Column(db.BigInteger)
 
     #association table reference to go between trucks and food categories
     food_categories = db.relationship("Food_Category",
@@ -77,8 +77,8 @@ class Truck(db.Model):
     def __repr__(self):
         """Provide helpful representation when printed."""
 
-        return ("<Truck truck_id: %s, name: %s, descrip: %s, yelp_link: %s, web_link: %s, twitter_handle: %s >" %
-                (self.truck_id, self.name, self.descrip, self.yelp_link, self.web_link, self.twitter_handle) )
+        return ("<Truck truck_id: %s, name: %s, descrip: %s, yelp_link: %s, web_link: %s, twitter_handle: %s, widget_id: %s>" %
+                (self.truck_id, self.name, self.descrip, self.yelp_link, self.web_link, self.twitter_handle, self.widget_id) )
 
 
 
@@ -211,7 +211,9 @@ def connect_to_db(app):
     """Connect the database to our Flask app."""
 
     # Configure to use our PostgreSQL database
+    # followers is the live db; test_followers is the testing db
     app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///followers'
+    # app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///test_followers'
     #Toggle this for debug/not debug
     app.config['SQLALCHEMY_ECHO'] = True
     db.app = app
@@ -230,4 +232,4 @@ if __name__ == "__main__":
     #alembic for migration of changes - Look it up later
 
     # Create all tables
-    # db.create_all()
+    #db.create_all()

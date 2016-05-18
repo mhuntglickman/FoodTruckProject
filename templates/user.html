@@ -6,14 +6,15 @@
 
   <b><p style="color:#9acd32">Email/Login: {{ user.email }}</p>  
   <p style="color:#9acd32">Phone: {{ user.phone }}</p></b>
-following_trucks
+  Click on a Truck to get full details.
 
+<!-- Iterate through the trucks and display each as a link -->
 <h2>{{ user.fname }}'s FoodTrucks</h2>
     <ul>
       {% for item in user.trucks %}
           <li>
-              <a href="/truck/{{ item.truck_id }}">
-                {{ item.name}})
+              <a href="/trucks/{{ item.truck_id }}">
+                {{ item.name}}
               </a>
           </li>
       {% endfor %}

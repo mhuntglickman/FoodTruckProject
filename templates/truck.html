@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% block content %}
+
+
+<!-- <div class="well spaced" style="width:97%;"> -->
+<!-- dispaly the truck name at the top -->
+<h1>{{ truck.name }}</h1>
+
+<div class="row">
+
+    <div class="col-xs-12 col-lg-6">
+    
+    <div class="web">
+      
+      <a href="{{ truck.web_link }}"> 
+      <img src="/static/foodtruck_icon.jpeg" alt="{{ truck.name }} web site" style="width:35px;height:35px;border:0;">
+      </a>Truck Details
+
+    </div>
+    
+
+    <script src="https://maps.googleapis.com/maps/api/js?callback=initMap"
+        async defer></script>
+    </div>
+    <div class="yelp">
+      
+
+      <a href="{{ truck.yelp_link }}"> 
+      <img src="/static/yelp_btn/yelp_review_btn_red@3x.png" alt="{{ truck.name }} yelp" style="width:275px;height:60px;border:0;">
+      </a>
+
+    </div>
+
+
+    <div class="calendars">
+      <form id="display-schedule" method="post" action="/truck_schedule">Schedule:
+      <input type="date" name="day">
+      <input type="hidden" name="truck-id" value="{{ truck.truck_id }}">
+      <input type="submit">
+      
+      </form>
+      <script src="/static/js/truck_schedules.js"></script>
+    </div>
+
+    <div id="map">
+    <script>
+      function initMap() {
+        var mapDiv = document.getElementById('map');
+        var map = new google.maps.Map(mapDiv, {
+          center: {lat: 44.540, lng: -78.546},
+          zoom: 8
+        });
+      }
+    </script>
+    <div id='timeline'> 
+
+    <a class="twitter-timeline" href="{{ truck.twitter_handle }}" data-widget-id="{{ truck.widget_id }}">Tweets by @{{ truck.twitter_handle }}</a>
+        
+    <script>!function(d,s,id){
+        var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';
+        if(!d.getElementById(id))
+          {js=d.createElement(s);
+          js.id=id;js.src=p+"://platform.twitter.com/widgets.js";
+          fjs.parentNode.insertBefore(js,fjs);
+          }
+        }(document,"script","twitter-wjs");
+    </script>
+  
+    </div>
+
+
+
+  
+{% endblock %}
