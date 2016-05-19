@@ -3,10 +3,11 @@
 from jinja2 import StrictUndefined
 import twitter
 import os
-from flask import Flask, render_template, request, flash, redirect, session
+from flask import Flask, render_template, request, flash, redirect, session, jsonify
 from flask_debugtoolbar import DebugToolbarExtension
 from model import connect_to_db, db, User, Truck, Food_Category, Schedule, Location, Truck_Food, User_Food, User_Truck 
-
+from flask.json import JSONEncoder
+from datetime import date, time
 
 app = Flask(__name__)
 
@@ -16,6 +17,16 @@ app.secret_key = "BooBooLah1234"
 # Normally, if you use an undefined variable in Jinja2, it fails silently.
 # This is horrible. Fix this so that, instead, it raises an error.
 app.jinja_env.undefined = StrictUndefined
+
+#make jsonify able to work its magic on dates, too
+class CustomJSONEncoder(JSONEncoder):
+    def default(self, obj):
+       if isinstance(obj, (date, time)):
+           return obj.isoformat()
+       else:
+           return JSONEncoder.default(self, obj)
+
+app.json_encoder = CustomJSONEncoder
 
 # default route
 @app.route('/')
@@ -152,20 +163,38 @@ def truck_detail(truck_id):
 
 
 
-@app.route("/truck_schedule", methods=['POST'])
+@app.route("/truck_schedule", methods=['GET'])
 def display_schedule():
     """This route is so I can get the date from the form on truck.html page; 
     then retrieve schedule and location from DB based on date and truck_id ."""
 
-    truck_id = request.form.get("truck-id")
-    day = request.form.get("day")
+    truck_id = request.args.get("truck_id")
+    day = request.args.get("day")
 
-    # add an order to our database here
-    # Need to fix the other side of this now.
+    print "*******************************"
+    print "truck id:", truck_id
+    print "day: ", day
+    print "*******************************"
+   
     mySchedule = Schedule.query.filter_by(truck_id=truck_id, day=day).first()
-    myDict ={longitude: mySchedule.longitude, lattitude: mySchedule.lattitude}
-    #I need to make long: mySchedule.longitude and lang:mySchedule.lattitude
-    return (jsonify(myDict))
+    if mySchedule:
+        myScheduleDict = {
+            'longitude': mySchedule.location.longitude, 
+            'lattitude': mySchedule.location.lattitude,
+            'start_time': mySchedule.start_time,
+            'end_time': mySchedule.end_time
+        }
+        #I need to make long: mySchedule.longitude and lang:mySchedule.lattitude
+        result = jsonify(myScheduleDict)
+        print result
+        return result
+    
+    else:
+        print "*******************************"
+        print "Returned a NONE, should be flashing a message"
+        print "*******************************"
+        flash("No Schedule for date selected. Please pick another date")
+        return redirect("/trucks/%s" % truck_id)
 
 
 if __name__ == "__main__":
