@@ -79,6 +79,7 @@ def register_process():
 
     return redirect("/users/%s" % new_user.user_id)
 
+#########################################################################
 # Get login credentials
 @app.route('/login', methods=['GET'])
 def login_form():
@@ -86,6 +87,7 @@ def login_form():
 
     return render_template("login_form.html")
 
+##########################################################################
 # Check login credentials
 @app.route('/login-process', methods=['POST'])
 def login_process():
@@ -119,16 +121,20 @@ def login_process():
 
     return redirect("/users/%s" % user.user_id)
 
+
+
+#########################################################################
 # Log the user out and remove the session variable
 @app.route('/logout')
 def logout():
     """Log out."""
 
-    del session["user_id"]
+    del session["current_user"]
     flash("Logged Out.")
     return redirect("/")
 
 
+#########################################################################
 # dynamic route to display the registered user
 # and the trucks they follow
 @app.route("/users/<int:user_id>")
@@ -141,6 +147,7 @@ def user_detail(user_id):
     return render_template("user.html", user=user)
 
 
+#########################################################################
 # Display truck details
 @app.route("/trucks/<int:truck_id>")
 def truck_detail(truck_id):
@@ -162,7 +169,8 @@ def truck_detail(truck_id):
     return render_template("truck.html", truck=truck)
 
 
-
+#########################################################################
+# process the 
 @app.route("/truck_schedule", methods=['GET'])
 def display_schedule():
     """This route is so I can get the date from the form on truck.html page; 
@@ -171,30 +179,47 @@ def display_schedule():
     truck_id = request.args.get("truck_id")
     day = request.args.get("day")
 
+    # debug purposes
+    # TO DO: comment out before deployement
     print "*******************************"
     print "truck id:", truck_id
     print "day: ", day
     print "*******************************"
    
+    # This query will return the schedule associated with the truck_id on the day
+    # the user as has selected.  Logic is in here for in the event a None is returned
     mySchedule = Schedule.query.filter_by(truck_id=truck_id, day=day).first()
+    #need to requery for the truck information and send to the javascript
+    truck_info = Truck.query.filter_by(truck_id=truck_id).first()
+    
+    # if the db returns a record then jsonify needed attributes and return to javascript
     if mySchedule:
         myScheduleDict = {
             'longitude': mySchedule.location.longitude, 
             'lattitude': mySchedule.location.lattitude,
             'start_time': mySchedule.start_time,
-            'end_time': mySchedule.end_time
+            'end_time': mySchedule.end_time,
+            'truck_name': truck_info.name
         }
-        #I need to make long: mySchedule.longitude and lang:mySchedule.lattitude
+        # This is using an overwritten to jsonfiy method to handle date and time objects
         result = jsonify(myScheduleDict)
+        # This is for debug purposes
+        # TO DO: comment out before deployment
         print result
         return result
-    
-    else:
+
+    #if the db returns None then flash a message and redirect to the truck page
+    elif mySchedule is None:
+
+        #TO DO: Comment out debugging
         print "*******************************"
-        print "Returned a NONE, should be flashing a message"
+        print "Returned a NONE, create and empty json object"
         print "*******************************"
-        flash("No Schedule for date selected. Please pick another date")
-        return redirect("/trucks/%s" % truck_id)
+        # Create an empty json object to return because the AJAX call has to get something
+        # back - will use logic on the js side to determine if an empty list and break out 
+        # of the success function.
+        result = jsonify()
+        return result
 
 
 if __name__ == "__main__":

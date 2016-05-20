@@ -1,11 +1,11 @@
 "use strict";
 
-
-
-function initMyMap(latt, longi) {
+function initMyMap(latt, longi, start_time, end_time, truck_name) {
     console.log("yo we be here");
+    console.log(latt, longi);
     var mapDiv = document.getElementById('map');
 
+    
     var map = new google.maps.Map(mapDiv, {
         center: {lat: latt, lng: longi},
         zoom: 15,
@@ -14,12 +14,22 @@ function initMyMap(latt, longi) {
         scaleControl: false,
         streetViewControl: true,
         rotateControl: true
-   
+        
     });
+
+    console.log(end_time);
+    // if (end_time > 12:00:00){
+    //     console.log("in the if loop")
+    //     end_time = end_time - 12:00:00;
+    // }
+
+
     var marker = new google.maps.Marker({
         position: {lat: latt, lng: longi},
         map: map,
-        title: 'Change Me'
+        title: 'Hours: ' + start_time + " - "+ end_time,
+        icon: 'http://imageshack.com/a/img924/7348/BZGR4q.png'
+        
         });
     
     console.log(map);
@@ -37,14 +47,27 @@ function submitSchedule(evt) {
         "truck_id": $("#truck-id").val()
     };
     console.log('form inputs created');
+    
     $.get("/truck_schedule", 
-    	   formInputs, function (myScheduleDict){
-            console.log(myScheduleDict);
-            console.log(myScheduleDict.lattitude, myScheduleDict.longitude);
-            initMyMap(myScheduleDict.lattitude, myScheduleDict.longitude);
-            // Still need to create the info box with start and end times for the 
-            // date user selected
+    	   formInputs, function (myScheduleDict)
+           {
+            //Immediately check to see if the object is empty
+            if(jQuery.isEmptyObject(myScheduleDict))
+                {
+                    document.getElementById('map').innerHTML = "";
+                    document.getElementById('map').innerHTML += '<br>No schedule available for date selected. Please pick another date.';
+                    
+                }
+            else 
+                {
+                    initMyMap(myScheduleDict.lattitude, myScheduleDict.longitude, myScheduleDict.start_time, myScheduleDict.end_time, myScheduleDict.truck_name);
+                }
            });
 }
 
 $("#display-schedule").on("submit", submitSchedule);
+
+
+
+
+

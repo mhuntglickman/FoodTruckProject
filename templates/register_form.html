@@ -1,67 +1,47 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="well spaced" style="width:40%;">
-<h1>Register</h1>
-<h5>Become a follower of your favorite FoodTrucks</h5>
+<div class="well spaced" style="width:30%;">
+    <h1>Register</h1>
+    
+    <h3>Become a follower of your favorite FoodTrucks</h3>
 
-<form action="/register-process" method="POST">
+        <div id="registration-form">
+            <form action="/register-process" method="POST">
 
-    <div class="form-group">
-        <label>
-            Email / Login 
-            <input type="email" name="email" class="form-control">
-        </label>
-    </div>
+                <h5>Email / Login </h5>
+                <input type="email" name="email" size="20" class="form-control">
+                
+                <h5>Password</h5>
+                <input type="password" name="password" class="form-control" size="35">
 
-    <div class="form-group">
-        <label>
-            Password
-            <input type="password" name="password" class="form-control">
-        </label>
-    </div>
+                <h5>First Name</h5>
+                <input type="text" name="fname" class="form-control">
+                
+                <h5>Last Name</h5>
+                <input type="text" name="lname" class="form-control">
+                
+                <h5>Phone</h5>
+                <input type="text" name="phone" class="form-control" value="5108675309"> 
+                <script>
+                //validate phone
+                    var phone = $('input[name="phone"]').val(),
+                    intRegex = /[0-9 -()+]+$/;
+                    if((phone.length < 6) || (!intRegex.test(phone)))
+                    {
+                      alert('Please enter a valid phone number.');
+                      return false;
+                    }
 
-    <div class="form-group">
-        <label>
-            First Name
-            <input type="text" name="fname" class="form-control">
-        </label>
-    </div>
+                </script>           
+                        
+                        
+                <h5>Zipcode</h5>
+                <input type="text" name="zipcode" class="form-control">
+                <br>
+                <input type="submit" value="Register" class="btn btn-success">
+            </form>
+        </div>
 
-    <div class="form-group">
-        <label>
-            Last Name
-            <input type="text" name="lname" class="form-control">
-        </label>
-    </div>
 
-    <div class="form-group">
-        <label>
-            Phone 
-            <input type="text" name="phone" class="form-control" value="999-888-7777">
-        </label>
-    </div>
-    <script>
-    //validate phone
-        var phone = $('input[name="phone"]').val(),
-        intRegex = /[0-9 -()+]+$/;
-        if((phone.length < 6) || (!intRegex.test(phone)))
-        {
-             alert('Please enter a valid phone number.');
-             return false;
-        }
-
-    </script>           
-    <div class="form-group">
-        <label>
-            Zipcode
-            <input type="text" name="zipcode" class="form-control">
-        </label>
-    </div>
-
-    <div class="form-group">
-        <input type="submit" value="Register" class="btn btn-success">
-    </div>
-
-</form>
 </div>
 {% endblock %}

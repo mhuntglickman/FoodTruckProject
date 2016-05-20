@@ -16,7 +16,7 @@
     
 
     <style>
-        h1, h2, h3,h5, .navbar-brand { font-family: "Rancho"; }
+        h1, h2, h3, h4,h5, .navbar-brand { font-family: "Rancho"; }
 
         
         #homepage-title {
@@ -33,7 +33,7 @@
           width: 100%;
           height: 100%;
           margin: 0;
-          background-color: #dddddd;
+          background-color: #F0F8FF;
         }
 
         #homepage-block {
@@ -79,8 +79,8 @@
                 <span class="icon-bar"></span>
             </button>
             <a class="navbar-brand" href="/">
+                <!-- <span class="glyphicon glyphicon-fast-food"></span> -->
                 <span class="glyphicon glyphicon-fast-food"></span>
-                <!-- <span class="glyphicon glyphicon-eye-open"></span> -->
                 FoodTruck Follower
             </a>
         </div>
@@ -93,8 +93,8 @@
                 <li><a href="/movies">View All Movies</a></li> -->
             </ul>
             <ul class="nav navbar-nav navbar-right">
-              {% if "user_id" in session %}
-                  <li><a href="/users/{{ session['user_id'] }}">Profile</a></li>
+              {% if "current_user" in session %}
+                  <li><a href="/users/{{ session['current_user'] }}">Profile</a></li>
                   <li><a href="/logout">Logout</a></li>
               {% else %}
                   <li><a href="/register">Register</a></li>
@@ -107,6 +107,7 @@
     </div>
     <!-- /.container-fluid -->
 </nav>
+
 <div id="extending">
     {% for flash in get_flashed_messages() %}
       <div class="alert alert-danger" style="width:90%; margin:0 auto;">{{ flash }}</div>
