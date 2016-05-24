@@ -54,7 +54,13 @@ function submitSchedule(evt) {
             //Immediately check to see if the object is empty
             if(jQuery.isEmptyObject(myScheduleDict))
                 {
+                    // Styling for the map div when there is no map to render.  
+                    // This overwrites the big blank box or other messages already in
+                    // the div
+                    document.getElementById('map').style.backgroundColor="#151515";                    
                     document.getElementById('map').innerHTML = "";
+                    document.getElementById('map').style.color="#32CD32"; 
+                    document.getElementById('map').style.font = "26px Rancho";
                     document.getElementById('map').innerHTML += '<br>No schedule available for date selected. Please pick another date.';
                     
                 }

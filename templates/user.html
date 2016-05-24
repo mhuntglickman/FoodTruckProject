@@ -8,16 +8,30 @@
   <p style="color:#9acd32">Phone: {{ user.phone }}</p></b>
   Click on a Truck to get full details.
 
-<!-- Iterate through the trucks and display each as a link -->
-<h2>{{ user.fname }}'s FoodTrucks</h2>
-    <ul>
-      {% for item in user.trucks %}
-          <li>
-              <a href="/trucks/{{ item.truck_id }}">
-                {{ item.name}}
-              </a>
-          </li>
-      {% endfor %}
-    </ul>
+  <!-- Iterate through the trucks and display each as a link -->
+  <h2>{{ user.fname }}'s FoodTrucks</h2>
+      <ul>
+        {% for item in user.trucks %}
+            <li>
+                <a href="/trucks/{{ item.truck_id }}">
+                  {{ item.name}}
+                </a>
+            </li>
+        {% endfor %}
+      </ul>
+</div>
+<div class="well spaced" style="width:97%" id=new_trucks>
+  <form action="">
+
+    {% for truck in truck_list %}
+    
+      <li>
+        <input type="checkbox"  value="Bike">{{truck.name}} >
+      </li>
+    
+    {% endfor %}
+
+  </form>
+</div>
 
 {% endblock %}

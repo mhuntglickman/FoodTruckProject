@@ -8,6 +8,9 @@ from flask_debugtoolbar import DebugToolbarExtension
 from model import connect_to_db, db, User, Truck, Food_Category, Schedule, Location, Truck_Food, User_Food, User_Truck 
 from flask.json import JSONEncoder
 from datetime import date, time
+# This is for phone number string manipulation
+import re
+
 
 app = Flask(__name__)
 
@@ -56,7 +59,10 @@ def register_process():
     phone = request.form["phone"]
     zipcode = request.form["zipcode"]
 
-    # create object to enter into DB
+    # Remove hyphens from the phone number before storing in DB
+    phone = re.sub('-','',phone)
+    
+    # create User object for DB table users
     new_user = User(email=email, password=password, fname=fname, lname=lname, phone=phone, zipcode=zipcode)
     
     #Debug
@@ -67,7 +73,7 @@ def register_process():
     # print '###############################'
     # print '###############################'
 
-    # insert object into DB
+    # insert User object into DB
     db.session.add(new_user)
     db.session.commit()
 
@@ -143,8 +149,25 @@ def user_detail(user_id):
 
     # query the db for the user object and pass through to 
     # to the user.html jinja template for display
+    # This includes the trucks a user followers
     user = User.query.get(user_id)
-    return render_template("user.html", user=user)
+    new_trucks = db.session.query(Truck.truck_id).outerjoin(User_Truck).filter(User_Truck.user_id !=user_id).group_by(Truck.truck_id).all()
+    
+    
+    # will need this counter for creating a loop later - trust me you will want this
+    
+    
+    # Strip out the truck id's from the list of tuples returned by the 
+    # query.  Then pass the 'new' list to the next db.query which creats a 
+    # iterable set of objects that are passed to the user.html jinja template
+    temp_truck = []
+    for i in new_trucks:
+        temp_truck.append(i[0])
+
+    truck_list = db.session.query(Truck).filter(Truck.truck_id.in_(temp_truck)).all()
+    counter = len(truck_list)
+
+    return render_template("user.html", user=user, truck_list=truck_list)
 
 
 #########################################################################
@@ -222,6 +245,8 @@ def display_schedule():
         return result
 
 
+
+#########################################################################
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the point
     # that we invoke the DebugToolbarExtension
