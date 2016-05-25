@@ -169,6 +169,17 @@ def user_detail(user_id):
 
     return render_template("user.html", user=user, truck_list=truck_list)
 
+##########################################################################
+# Follow new trucks and un-follow trucks route from the user profile page
+@app.route ('/update-trucks', methods=['GET'])
+def change_trucks():
+    """Update users trucks they follow"""
+    # TO DO:
+    # The user will check boxes 
+    # iterate through the checkboxes w/ id =truck_id
+    # run db quereris either adding new records to users_trucks table
+    # or inversely delete records from the table
+    pass
 
 #########################################################################
 # Display truck details

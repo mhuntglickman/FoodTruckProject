@@ -6,31 +6,35 @@
 
   <b><p style="color:#9acd32">Email/Login: {{ user.email }}</p>  
   <p style="color:#9acd32">Phone: {{ user.phone }}</p></b>
-  Click on a Truck to get full details.
 
   <!-- Iterate through the trucks and display each as a link -->
   <h2>{{ user.fname }}'s FoodTrucks</h2>
-      <ul>
-        {% for item in user.trucks %}
-            <li>
-                <a href="/trucks/{{ item.truck_id }}">
-                  {{ item.name}}
-                </a>
-            </li>
-        {% endfor %}
-      </ul>
+  <h4>Click on a truck further details.<br>
+  Unfollow a truck by clicking the checkbox and submitting the form.</h4><br>
+  
+  <form action="/update-trucks" method="GET">
+    <ul>
+      {% for item in user.trucks %}
+        
+        <a href="/trucks/{{ item.truck_id }}">{{ item.name}}</a> 
+        <input type="checkbox" id="{{item.truck_id}}"><br>
+
+      {% endfor %}
+    </ul>
 </div>
-<div class="well spaced" style="width:97%" id=new_trucks>
-  <form action="">
+
+<div class="well spaced" style="width:97%" id="new_trucks">
+    <h4>Other trucks to follow:</h4>
 
     {% for truck in truck_list %}
     
-      <li>
-        <input type="checkbox"  value="Bike">{{truck.name}} >
-      </li>
+      <ul>
+        <input type="checkbox" id="{{truck.truck_id}}"> {{truck.name}} <br>
+      </ul>
     
     {% endfor %}
 
+    <input type="submit" value="Update Trucks">
   </form>
 </div>
 
