@@ -12,16 +12,19 @@
   <h4>Click on a truck further details.<br>
   Unfollow a truck by clicking the checkbox and submitting the form.</h4><br>
   
-  <form action="/update-trucks" method="GET">
+  <form id="update-truck-form" action="/update-trucks" method="post">
     <ul>
       {% for item in user.trucks %}
         
         <a href="/trucks/{{ item.truck_id }}">{{ item.name}}</a> 
-        <input type="checkbox" id="{{item.truck_id}}"><br>
+        <input type="checkbox" class="following" name="{{item.truck_id}}"><br>
 
       {% endfor %}
     </ul>
 </div>
+<script>
+  $(".following").prop('checked', true);
+</script>
 
 <div class="well spaced" style="width:97%" id="new_trucks">
     <h4>Other trucks to follow:</h4>
@@ -29,13 +32,14 @@
     {% for truck in truck_list %}
     
       <ul>
-        <input type="checkbox" id="{{truck.truck_id}}"> {{truck.name}} <br>
+        <input type="checkbox" name="{{truck.truck_id}}"> {{truck.name}} <br>
       </ul>
     
     {% endfor %}
 
-    <input type="submit" value="Update Trucks">
+    <button type="button" id="btn-ser1">Submit</button>
   </form>
 </div>
+<script src="/static/js/truck-update.js"></script>
 
 {% endblock %}

@@ -30,6 +30,7 @@ class CustomJSONEncoder(JSONEncoder):
            return JSONEncoder.default(self, obj)
 
 app.json_encoder = CustomJSONEncoder
+counter = 0
 
 # default route
 @app.route('/')
@@ -150,6 +151,7 @@ def user_detail(user_id):
     # query the db for the user object and pass through to 
     # to the user.html jinja template for display
     # This includes the trucks a user followers
+    
     user = User.query.get(user_id)
     new_trucks = db.session.query(Truck.truck_id).outerjoin(User_Truck).filter(User_Truck.user_id !=user_id).group_by(Truck.truck_id).all()
     
@@ -171,15 +173,23 @@ def user_detail(user_id):
 
 ##########################################################################
 # Follow new trucks and un-follow trucks route from the user profile page
-@app.route ('/update-trucks', methods=['GET'])
+@app.route ('/update-trucks', methods=['POST'])
 def change_trucks():
     """Update users trucks they follow"""
     # TO DO:
-    # The user will check boxes 
-    # iterate through the checkboxes w/ id =truck_id
+    # The user will see check boxes DONE: 5/24
+    # iterate through the checkboxes named w/ id =truck_id DONE: 5/24
+    # send back the serialized list of items
+    # parse out the array sent back
+    # create db queries 
     # run db quereris either adding new records to users_trucks table
-    # or inversely delete records from the table
-    pass
+    # send back the new list of trucks they are either following or not following
+    print "***********************************"
+    print request.form.items()
+    print "***********************************"
+    # example output: [('8', u'on'), ('4', u'on'), ('7', u'on'), ('6', u'on')]
+    # truck_array = request.form.getlist('truck_array')
+    return jsonify({})
 
 #########################################################################
 # Display truck details
@@ -191,6 +201,7 @@ def truck_detail(truck_id):
     user_id = session.get("current_user")
     if not user_id:
         raise Exception("No user logged in.")
+        return redirect("/")
 
 
     # This was for debugging 
@@ -209,16 +220,23 @@ def truck_detail(truck_id):
 def display_schedule():
     """This route is so I can get the date from the form on truck.html page; 
     then retrieve schedule and location from DB based on date and truck_id ."""
+    
+    # Double check the user is logged onto the system and if not throw back to homepage
+    user_id = session.get("current_user")
+    if not user_id:
+        raise Exception("No user logged in.")
+        redirect 
+    
 
     truck_id = request.args.get("truck_id")
     day = request.args.get("day")
 
     # debug purposes
     # TO DO: comment out before deployement
-    print "*******************************"
-    print "truck id:", truck_id
-    print "day: ", day
-    print "*******************************"
+    # print "*******************************"
+    # print "truck id:", truck_id
+    # print "day: ", day
+    # print "*******************************"
    
     # This query will return the schedule associated with the truck_id on the day
     # the user as has selected.  Logic is in here for in the event a None is returned
@@ -238,17 +256,18 @@ def display_schedule():
         # This is using an overwritten to jsonfiy method to handle date and time objects
         result = jsonify(myScheduleDict)
         # This is for debug purposes
-        # TO DO: comment out before deployment
-        print result
+        # DONE: comment out before deployment
+        # print result
         return result
 
     #if the db returns None then flash a message and redirect to the truck page
     elif mySchedule is None:
 
-        #TO DO: Comment out debugging
-        print "*******************************"
-        print "Returned a NONE, create and empty json object"
-        print "*******************************"
+        # Debugging
+        # print "*******************************"
+        # print "Returned a NONE, create and empty json object"
+        # print "*******************************"
+
         # Create an empty json object to return because the AJAX call has to get something
         # back - will use logic on the js side to determine if an empty list and break out 
         # of the success function.

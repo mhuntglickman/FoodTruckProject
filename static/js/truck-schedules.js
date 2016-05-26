@@ -46,7 +46,9 @@ function submitSchedule(evt) {
         "day": $("#day").val(),
         "truck_id": $("#truck-id").val()
     };
-    console.log('form inputs created');
+    console.log(formInputs);
+    // TO DO: Comment out before career day
+    debugger;
     
     $.get("/truck_schedule", 
     	   formInputs, function (myScheduleDict)
