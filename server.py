@@ -184,38 +184,55 @@ def change_trucks():
     # TO DO:
     # The user will see check boxes DONE: 5/24
     # iterate through the checkboxes named w/ id =truck_id DONE: 5/24
-    # send back the serialized list of items
-    # parse out the array sent back
-    # create db queries 
-    # run db quereris either adding new records to users_trucks table
+    # 
+    # 
+    # create db queries 5/27/2016
+    # run db quereris either adding new records to users_trucks table 5/27/2016
+    # create a custom dictionary to send back 5/27/2015
     # send back the new list of trucks they are either following or not following
-    print "***********************************"
-    print request.form.items()
-    truck_list = request.form.items()
-    print "***********************************"
-    print "***********************************"
+
+    #intialize the dictionary needed to send back info through json
+    my_dict = {'trucks': {'name':[],
+                           'truck_id':[]
+                           },
+               'other_trucks':{'name':[],
+                               'truck_id':[]
+                                }
+               }
+    
     # example output: [('8', u'on'), ('4', u'on'), ('7', u'on'), ('6', u'on')]
+    truck_list = request.form.items()
+    
+    
+
+
     # TO DO: Make this a function instead of a loop
+    
+    # grab the user_id from session
     user_id = session.get("current_user")
    
-    for item in truck_list:
-        # I don't like asking for .all because in reality this should be 
-        # a .one as it is an association table.  However when no
+    for truck in truck_list:
+        # I don't like asking for '.all' because in reality this should be 
+        # a '.one' as it is an association table.  However when no
         # record is returned Alchemy does not raise a 'No Result Found' error
-        # therefore only work around appears to be to use the .all and then 
+        # therefore only work around is to use the '.all' and then 
         # test for an empty response query. 5/26/2016
-        output = db.session.query(User_Truck).filter_by(user_id=user_id, truck_id=item[0]).first()
+        result1 = db.session.query(User_Truck).filter_by(user_id=user_id, truck_id=truck[0]).first()
         
-        if output:
+        # if a record is found then delete it
+        if result1:
             print "***********************************"
-            print output.truck_id, output.user_id
+            print result1.truck_id, result1.user_id
             print "***********************************"
             print "***********************************"
+            db.session.delete(result1)
+            db.session.commit()
+        # else no record create one
         else:
-            # Yes this is reptative but for the moment it is working 
-            # it should really be add them all to the session and commit once 6/26/2016
-            new = User_Truck(user_id=user_id,truck_id=item[0])
-            db.session.add(new)
+            # Reptative but for the moment it is working 
+            # best method would be add them all to the session and commit once 6/26/2016
+            new_item = User_Truck(user_id=user_id,truck_id=truck[0])
+            db.session.add(new_item)
             db.session.commit()
         #end of if 
 
@@ -223,7 +240,7 @@ def change_trucks():
 
 
     # query the db for the user object and pass through to 
-    # to the user.html jinja template for display
+    # to the user.html template for display
     # because of the ORM this includes the truck info for trucks user followers
     # example:  for item in user.trucks:
     #           truck_id    name
@@ -231,6 +248,13 @@ def change_trucks():
     #           6           Drums & Crumbs  
 
     user_obj = User.query.get(user_id)
+
+    for truck_obj in user_obj.trucks:
+        my_dict['trucks']['name'].append(truck_obj.name)
+        my_dict['trucks']['truck_id'].append(truck_obj.truck_id)
+
+        
+        
 
     # new_trucks = db.session.query(Truck.truck_id).outerjoin(User_Truck).filter(User_Truck.user_id !=user_id).group_by(Truck.truck_id).all()
     
@@ -248,22 +272,7 @@ def change_trucks():
     # AJAX route
 
     # construct dict to hold data to return to client
-    user[trucks[
-                truck_id[3,4]
-                name['boba cha', 'cheese gone wild']
-                ]
-
-    # Top level 
-    user_dict = {}
-    # trucks array to hold truck info
-    user_dict['trucks'] = []
-    user_dict['trucks'].append[truck_id]
-    user_dict['trucks'].append[name]
-    user
-    for truck in trucks:
-        user_dict['trucks'].append(truck)
-
-    # etc etc etc
+    # and now need to append to each of the sub keys values......
 
 
 
