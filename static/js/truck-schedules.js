@@ -58,7 +58,8 @@ function submitSchedule(evt) {
                 {
                     // Styling for the map div when there is no map to render.  
                     // This overwrites the big blank box or other messages already in
-                    // the div
+                    // the div and done in javascript not jQuery just because it
+                    // is good to know both methods 6/20/2016
                     document.getElementById('map').style.backgroundColor="#151515";                    
                     document.getElementById('map').innerHTML = "";
                     document.getElementById('map').style.color="#32CD32"; 

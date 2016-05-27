@@ -7,9 +7,12 @@ from flask import Flask, render_template, request, flash, redirect, session, jso
 from flask_debugtoolbar import DebugToolbarExtension
 from model import connect_to_db, db, User, Truck, Food_Category, Schedule, Location, Truck_Food, User_Food, User_Truck 
 from flask.json import JSONEncoder
+import json
 from datetime import date, time
 # This is for phone number string manipulation
 import re
+# pdb is for debugging
+import pdb
 
 
 app = Flask(__name__)
@@ -150,18 +153,20 @@ def user_detail(user_id):
 
     # query the db for the user object and pass through to 
     # to the user.html jinja template for display
-    # This includes the trucks a user followers
-    
+    # because of the ORM this includes the truck info for trucks user followers
+    # example:  for item in user.trucks:
+    #           truck_id    name
+    #           4           El Gondo
+    #           6           Drums & Crumbs  
+
     user = User.query.get(user_id)
+
+    # This generates a list of the trucks a user does not follow
     new_trucks = db.session.query(Truck.truck_id).outerjoin(User_Truck).filter(User_Truck.user_id !=user_id).group_by(Truck.truck_id).all()
-    
-    
-    # will need this counter for creating a loop later - trust me you will want this
-    
     
     # Strip out the truck id's from the list of tuples returned by the 
     # query.  Then pass the 'new' list to the next db.query which creats a 
-    # iterable set of objects that are passed to the user.html jinja template
+    # iterable set of objects that are passed on to user.html jinja template
     temp_truck = []
     for i in new_trucks:
         temp_truck.append(i[0])
@@ -186,10 +191,84 @@ def change_trucks():
     # send back the new list of trucks they are either following or not following
     print "***********************************"
     print request.form.items()
+    truck_list = request.form.items()
+    print "***********************************"
     print "***********************************"
     # example output: [('8', u'on'), ('4', u'on'), ('7', u'on'), ('6', u'on')]
-    # truck_array = request.form.getlist('truck_array')
-    return jsonify({})
+    # TO DO: Make this a function instead of a loop
+    user_id = session.get("current_user")
+   
+    for item in truck_list:
+        # I don't like asking for .all because in reality this should be 
+        # a .one as it is an association table.  However when no
+        # record is returned Alchemy does not raise a 'No Result Found' error
+        # therefore only work around appears to be to use the .all and then 
+        # test for an empty response query. 5/26/2016
+        output = db.session.query(User_Truck).filter_by(user_id=user_id, truck_id=item[0]).first()
+        
+        if output:
+            print "***********************************"
+            print output.truck_id, output.user_id
+            print "***********************************"
+            print "***********************************"
+        else:
+            # Yes this is reptative but for the moment it is working 
+            # it should really be add them all to the session and commit once 6/26/2016
+            new = User_Truck(user_id=user_id,truck_id=item[0])
+            db.session.add(new)
+            db.session.commit()
+        #end of if 
+
+    #end of for loop
+
+
+    # query the db for the user object and pass through to 
+    # to the user.html jinja template for display
+    # because of the ORM this includes the truck info for trucks user followers
+    # example:  for item in user.trucks:
+    #           truck_id    name
+    #           4           El Gondo
+    #           6           Drums & Crumbs  
+
+    user_obj = User.query.get(user_id)
+
+    # new_trucks = db.session.query(Truck.truck_id).outerjoin(User_Truck).filter(User_Truck.user_id !=user_id).group_by(Truck.truck_id).all()
+    
+    # Strip out the truck id's from the list of tuples returned by the 
+    # query.  Then pass the 'new' list to the next db.query which creats a 
+    # iterable set of objects that are passed to the user.html jinja template
+    # temp_truck = []
+    # for i in new_trucks:
+    #     temp_truck.append(i[0])
+
+    # truck_list = db.session.query(Truck).filter(Truck.truck_id.in_(temp_truck)).all()
+    # counter = len(truck_list)
+
+    # TO DO: jsonify the returned set of objects from the two db queries and send them back to the 
+    # AJAX route
+
+    # construct dict to hold data to return to client
+    user[trucks[
+                truck_id[3,4]
+                name['boba cha', 'cheese gone wild']
+                ]
+
+    # Top level 
+    user_dict = {}
+    # trucks array to hold truck info
+    user_dict['trucks'] = []
+    user_dict['trucks'].append[truck_id]
+    user_dict['trucks'].append[name]
+    user
+    for truck in trucks:
+        user_dict['trucks'].append(truck)
+
+    # etc etc etc
+
+
+
+    
+    return jsonify(user_dict)
 
 #########################################################################
 # Display truck details
@@ -253,11 +332,9 @@ def display_schedule():
             'end_time': mySchedule.end_time,
             'truck_name': truck_info.name
         }
-        # This is using an overwritten to jsonfiy method to handle date and time objects
+        # This is using an overwritten jsonfiy method to handle date and time objects
         result = jsonify(myScheduleDict)
-        # This is for debug purposes
-        # DONE: comment out before deployment
-        # print result
+        
         return result
 
     #if the db returns None then flash a message and redirect to the truck page

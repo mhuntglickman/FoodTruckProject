@@ -1,7 +1,8 @@
 {% extends 'base.html' %}
 {% block content %}
 <br>
-<div class="well spaced" style="width:97%">
+
+<div class="well spaced" style="width:97%" id="top-level">
   <h2>{{ user.fname }} {{ user.lname }}</h2>
 
   <b><p style="color:#9acd32">Email/Login: {{ user.email }}</p>  
@@ -9,25 +10,34 @@
 
   <!-- Iterate through the trucks and display each as a link -->
   <h2>{{ user.fname }}'s FoodTrucks</h2>
+</div>
+
+<div class="well spaced" style="width:97%" id="old_trucks">
+ 
   <h4>Click on a truck further details.<br>
   Unfollow a truck by clicking the checkbox and submitting the form.</h4><br>
   
   <form id="update-truck-form" action="/update-trucks" method="post">
     <ul>
-      {% for item in user.trucks %}
+      {% for truck in user.trucks %}
         
-        <a href="/trucks/{{ item.truck_id }}">{{ item.name}}</a> 
-        <input type="checkbox" class="following" name="{{item.truck_id}}"><br>
+        <a href="/trucks/{{ truck.truck_id }}">{{ truck.name}}</a> 
+        <input type="checkbox" class="following" name="{{truck.truck_id}}"><br>
 
       {% endfor %}
     </ul>
 </div>
-<script>
-  $(".following").prop('checked', true);
-</script>
-
+<!-- This will default check all the trucks a user already follows
+  but this might not be the best way to do it so I'm going to try a work
+  around of having the user click on a truck they don't want to follow
+  while this is not ideal because this has a cascading effect on the pages display
+  it is the best way to handle it for now.
+// <script>
+//   $(".following").prop('checked', true);
+// </script>
+ -->
 <div class="well spaced" style="width:97%" id="new_trucks">
-    <h4>Other trucks to follow:</h4>
+    <h4>More trucks to follow:</h4>
 
     {% for truck in truck_list %}
     
@@ -38,7 +48,9 @@
     {% endfor %}
 
     <button type="button" id="btn-ser1">Submit</button>
-  </form>
+  </form> 
+<!-- end of the form that spans 2 div's -->
+
 </div>
 <script src="/static/js/truck-update.js"></script>
 
