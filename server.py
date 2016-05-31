@@ -161,18 +161,30 @@ def user_detail(user_id):
 
     user = User.query.get(user_id)
 
-    # This generates a list of the trucks a user does not follow
-    new_trucks = db.session.query(Truck.truck_id).outerjoin(User_Truck).filter(User_Truck.user_id !=user_id).group_by(Truck.truck_id).all()
+    # Generates a list of the trucks a user does not follow
+    #new_trucks = db.session.query(Truck.truck_id).outerjoin(User_Truck).filter(User_Truck.user_id !=user_id).group_by(Truck.truck_id).all()
     
+
+    # Get all of the trucks the current user is following from association table
+    my_trucks = db.session.query(User_Truck.truck_id).filter(User_Truck.user_id == user_id).all()
+    my_trucks = set(my_trucks)
+
+    # Get all the trucks 
+    all_trucks = db.session.query(Truck.truck_id).all()
+    all_trucks = set(all_trucks)
+
+    # remove the trucks a user follows from the all_trucks list
+    new_trucks = all_trucks - my_trucks
+
     # Strip out the truck id's from the list of tuples returned by the 
     # query.  Then pass the 'new' list to the next db.query which creats a 
     # iterable set of objects that are passed on to user.html jinja template
-    temp_truck = []
-    for i in new_trucks:
-        temp_truck.append(i[0])
+    # temp_truck = []
+    # for i in new_trucks:
+    #     temp_truck.append(i[0])
 
-    truck_list = db.session.query(Truck).filter(Truck.truck_id.in_(temp_truck)).all()
-    counter = len(truck_list)
+    truck_list = db.session.query(Truck).filter(Truck.truck_id.in_(new_trucks)).all()
+    
 
     return render_template("user.html", user=user, truck_list=truck_list)
 
@@ -242,7 +254,7 @@ def change_trucks():
     # query the db for the user object and pass through to 
     # to the user.html template for display
     # because of the ORM this includes the truck info for trucks user followers
-    # example:  for item in user.trucks:
+    # example:  for truck_obj in user_obj.trucks:
     #           truck_id    name
     #           4           El Gondo
     #           6           Drums & Crumbs  
@@ -251,33 +263,31 @@ def change_trucks():
 
     for truck_obj in user_obj.trucks:
         my_dict['trucks']['name'].append(truck_obj.name)
-        my_dict['trucks']['truck_id'].append(truck_obj.truck_id)
+        my_dict['trucks']['truck_id'].append(truck_obj.truck_id)    
 
         
         
-
-    # new_trucks = db.session.query(Truck.truck_id).outerjoin(User_Truck).filter(User_Truck.user_id !=user_id).group_by(Truck.truck_id).all()
-    
     # Strip out the truck id's from the list of tuples returned by the 
     # query.  Then pass the 'new' list to the next db.query which creats a 
-    # iterable set of objects that are passed to the user.html jinja template
-    # temp_truck = []
-    # for i in new_trucks:
-    #     temp_truck.append(i[0])
+    # iterable set of objects that are inserted into the dictionary and wind back to
+    # the AJAX call. 5/27/2016
+    not_following = db.session.query(Truck.truck_id).outerjoin(User_Truck).filter(User_Truck.user_id !=user_id).group_by(Truck.truck_id).all()
+    
+    temp_truck_list = []
+    
+    for items in not_following:
+         temp_truck_list.append(items[0])
 
-    # truck_list = db.session.query(Truck).filter(Truck.truck_id.in_(temp_truck)).all()
-    # counter = len(truck_list)
+    truck_objs= db.session.query(Truck).filter(Truck.truck_id.in_(temp_truck_list)).all()
+    for truck in truck_objs:
+        my_dict['other_trucks']['name'].append(truck.name)
+        my_dict['other_trucks']['truck_id'].append(truck.truck_id)    
+
 
     # TO DO: jsonify the returned set of objects from the two db queries and send them back to the 
     # AJAX route
-
-    # construct dict to hold data to return to client
-    # and now need to append to each of the sub keys values......
-
-
-
     
-    return jsonify(user_dict)
+    return jsonify(my_dict)
 
 #########################################################################
 # Display truck details

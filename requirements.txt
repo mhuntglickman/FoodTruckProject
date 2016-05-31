@@ -5,6 +5,7 @@ Flask-SQLAlchemy==2.0
 itsdangerous==0.24
 Jinja2==2.7.3
 MarkupSafe==0.23
+pprintpp==0.2.3
 psycopg2==2.6.1
 six==1.10.0
 SQLAlchemy==1.0.3
