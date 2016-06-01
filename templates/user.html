@@ -6,6 +6,7 @@
   <h2>{{ user.fname }} {{ user.lname }}</h2>
 
   <b><p style="color:#9acd32">Email/Login: {{ user.email }}</p>  
+    <!-- TO DO: Make the phone number display in a nice format -->
   <p style="color:#9acd32">Phone: {{ user.phone }}</p></b>
 
   <!-- Iterate through the trucks and display each as a link -->
@@ -16,45 +17,41 @@
 <!-- These are trucks the user is currently following -->
 <div class="well spaced" style="width:97%" id="watching">
  
-  <h4>Click on a truck further details.<br>
-  Unfollow a truck by clicking the checkbox and submitting the form.</h4><br>
+  <h4>Click the link to get more details about the truck.<br>
+  To Unfollow a truck, click the checkbox.<br>
+  When you are done submit the form.</h4><br>"
   
   <form id="update-truck-form" action="/update-trucks" method="post">
-    <ul>
+    <ol>
       {% for truck in user.trucks %}
-        
+        <li>
         <a href="/trucks/{{ truck.truck_id }}">{{ truck.name}}</a> 
-        <input type="checkbox" class="following" name="{{truck.truck_id}}"><br>
-
+        <input type="checkbox" name="{{truck.truck_id}}"><br>
+      </li>
       {% endfor %}
-    </ul>
+    </ol>
+
 </div>
-<!-- This will default check all the trucks a user already follows
-  but this might not be the best way to do it so I'm going to try a work
-  around of having the user click on a truck they don't want to follow
-  while this is not ideal because this has a cascading effect on the pages display
-  it is the best way to handle it for now.
-// <script>
-//   $(".following").prop('checked', true);
-// </script>
- -->
- <!-- These are trucks the user could follow -->
+
+ <!-- Trucks a user not currently following -->
 <div class="well spaced" style="width:97%" id="not-watching">
-    <h4>More trucks to follow:</h4>
-
-    {% for truck in truck_list %}
-    
-      <ul>
-        <input type="checkbox" name="{{truck.truck_id}}"> {{truck.name}} <br>
-      </ul>
-    
-    {% endfor %}
-
-    <button type="button" id="btn-ser1">Submit</button>
+    <h4>Select more trucks to follow:</h4>
+     <ul>
+      {% for truck in truck_list %}
+        <li>
+        <a href="/trucks/{{ truck.truck_id }}">{{ truck.name}}</a> 
+        <input type="checkbox" name="{{truck.truck_id}}"><br>
+        </li>  
+      {% endfor %}
+     </ul>
+     <br>
+     <br>
+    <button type="button" id="btn-ser1">Submit Your Changes</button>
   </form> 
 <!-- end of the form that spans 2 div's -->
 
 </div>
+
 <script src="/static/js/truck-update.js"></script>
 
 {% endblock %}

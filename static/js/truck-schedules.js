@@ -1,7 +1,7 @@
 "use strict";
 
 function initMyMap(latt, longi, start_time, end_time, truck_name) {
-    console.log("yo we be here");
+    //console.log("yo we be here");
     console.log(latt, longi);
     var mapDiv = document.getElementById('map');
 
@@ -72,8 +72,12 @@ function submitSchedule(evt) {
                     initMyMap(myScheduleDict.lattitude, myScheduleDict.longitude, myScheduleDict.start_time, myScheduleDict.end_time, myScheduleDict.truck_name);
                 }
            });
-}
+}// End of anonymous success function from AJAX call
 
+
+///////////////////////////////////
+// Click event button for truck.html
+// 
 $("#display-schedule").on("submit", submitSchedule);
 
 
