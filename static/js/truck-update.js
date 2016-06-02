@@ -61,16 +61,6 @@ function submitTrucks(evt) {
               document.getElementById("watching").innerHTML = "";
               document.getElementById("not-watching").innerHTML = "";
 
-              //////////////////////////////////////////////////////
-              //One time strings to build and add to this HTML
-              document.getElementById("watching").innerHTML += "<h4>Click the link to get more details about the truck.<br>To Unfollow a truck, click the checkbox.<br>When you are done submit the form.</h4><br>";
-              var AddHTML = "<form id=\"update-truck-form\" action=\"/update-trucks\" method=\"post\">";
-              document.getElementById("watching").innerHTML += AddHTML;
-
-              document.getElementById("not-watching").innerHTML += "<h4>Select more trucks to follow:</h4>";
-              
-
-
 
               ///////////////////////////////////////////////////////////////
               // create a list of truck names and id's from the json result 
@@ -84,7 +74,7 @@ function submitTrucks(evt) {
               var no_watcher_id = results['other_trucks']['truck_id'];
               console.log(no_watcher_id, no_watcher)
               console.log(truck_watcher_id, truck_watcher)
-              debugger;
+              // debugger;
 
 
               //////////////////////////////////////////////////////////////////
@@ -93,12 +83,6 @@ function submitTrucks(evt) {
               AddBackHTML("not-watching", no_watcher, no_watcher_id);
               
 
-              //////////////////////////////////////////////////////
-              //One time strings to build and add to this HTML
-              document.getElementById("not-watching").innerHTML += "<br>";
-              document.getElementById("not-watching").innerHTML += "<br>";
-              document.getElementById("not-watching").innerHTML += "<button type=\"button\" id=\"btn-ser1\">Submit Your Changes</button>";
-              document.getElementById("not-watching").innerHTML += "</form>";
               //debugger;
 
 

@@ -15,13 +15,14 @@
 
 
 <!-- These are trucks the user is currently following -->
-<div class="well spaced" style="width:97%" id="watching">
+<div class="well spaced" style="width:97%" id="form-1">
  
   <h4>Click the link to get more details about the truck.<br>
   To Unfollow a truck, click the checkbox.<br>
   When you are done submit the form.</h4><br>"
   
   <form id="update-truck-form" action="/update-trucks" method="post">
+    <fieldset id=watching>
     <ol>
       {% for truck in user.trucks %}
         <li>
@@ -30,12 +31,14 @@
       </li>
       {% endfor %}
     </ol>
+  </fieldset>
 
 </div>
 
  <!-- Trucks a user not currently following -->
-<div class="well spaced" style="width:97%" id="not-watching">
-    <h4>Select more trucks to follow:</h4>
+<div class="well spaced" style="width:97%" id="form-1">
+    <h4>Preview trucks by clicking a link and select more trucks to follow:</h4>
+    <fieldset id="not-watching">
      <ul>
       {% for truck in truck_list %}
         <li>
@@ -44,6 +47,7 @@
         </li>  
       {% endfor %}
      </ul>
+    </fieldset>
      <br>
      <br>
     <button type="button" id="btn-ser1">Submit Your Changes</button>

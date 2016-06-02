@@ -60,22 +60,15 @@ def register_process():
     password = request.form["password"]
     fname = request.form["fname"]
     lname = request.form["lname"]
-    phone = request.form["phone"]
+    t_phone = request.form["phone"]
     zipcode = request.form["zipcode"]
 
     # Remove hyphens from the phone number before storing in DB
-    phone = re.sub('-','',phone)
+    phone = re.sub('-','',t_phone)
     
     # create User object for DB table users
     new_user = User(email=email, password=password, fname=fname, lname=lname, phone=phone, zipcode=zipcode)
     
-    #Debug
-    # print '###############################'
-    # print '###############################'
-    # print (('email: %s, password: %s, fname: %s, lname: %s, phone: %s, zipcode: %s')%
-    #         (new_user.email, new_user.password, new_user.fname, new_user.lname, new_user.phone, new_user.zipcode))
-    # print '###############################'
-    # print '###############################'
 
     # insert User object into DB
     db.session.add(new_user)
