@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -10,14 +11,16 @@
     <!-- Bootstrap -->
     <link href="//maxcdn.bootstrapcdn.com/bootswatch/3.3.4/cyborg/bootstrap.min.css"
           rel="stylesheet">
-    <link href='https://fonts.googleapis.com/css?family=Rancho&effect=shadow-multiple' rel='stylesheet' type='text/css'>
+    <!-- <link href='https://fonts.googleapis.com/css?family=Rancho&effect=shadow-multiple' rel='stylesheet' type='text/css'>
 
-
+ -->
+    <link rel="icon" 
+      type="image/png" 
+      href="/static/foodtruck_small_360.png">
     
 
     <style>
-        h1, h2, h3, h4,h5, .navbar-brand { font-family: "Rancho"; }
-
+        h1, h2, h3, h4,h5, .navbar-brand { font-family: Arial; }
         
         #homepage-title {
             margin: 0;
@@ -28,14 +31,12 @@
             font-weight: 400;
             font-size: 500%;
         }
-
         html, body {
           width: 100%;
           height: 100%;
           margin: 0;
           background-color: #F0F8FF;
         }
-
         #homepage-block {
           width: 100%;
           height: 100%;
@@ -54,18 +55,21 @@
                       width: 100%;
                       height: 100%;
                    }
-
         .spaced {
           margin-left:20px; 
           margin-top: 20px;
         }
-
     </style>
   <script src="https://code.jquery.com/jquery.js"></script>   
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDsAtH9vvuV5H6gSIK4pQDUnksdpcxwhuE" async defer></script>
 
 </head>
 <body>
+
+
+
+<!-- /////////////////////////////////nav bar/////////////////////////////////////////////////// -->
+
 <nav class="navbar navbar-inverse" style="margin-bottom: 0px">
     <div class="container-fluid">
         <!-- Brand and toggle get grouped for better mobile display -->
@@ -78,11 +82,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="/">
-                <!-- <span class="glyphicon glyphicon-fast-food"></span> -->
-                <span class="glyphicon glyphicon-fast-food"></span>
-                FoodTruck Follower
-            </a>
+            <a class="navbar-brand" href="/">FoodTruck Follower</a>
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
@@ -107,7 +107,9 @@
     </div>
     <!-- /.container-fluid -->
 </nav>
+<!-- /////////////////////////////////nav bar end/////////////////////////////////////////////////// -->
 
+<!-- /////////////////////////////////extending/////////////////////////////////////////////////// -->
 <div id="extending">
     {% for flash in get_flashed_messages() %}
       <div class="alert alert-danger" style="width:90%; margin:0 auto;">{{ flash }}</div>
@@ -115,9 +117,6 @@
 {% block content %}
 {% endblock %}
 </div>
-
-<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 
 </body>
 </html>
