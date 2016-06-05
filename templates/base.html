@@ -11,32 +11,51 @@
     <!-- Bootstrap -->
     <link href="//maxcdn.bootstrapcdn.com/bootswatch/3.3.4/cyborg/bootstrap.min.css"
           rel="stylesheet">
-    <!-- <link href='https://fonts.googleapis.com/css?family=Rancho&effect=shadow-multiple' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
 
- -->
     <link rel="icon" 
       type="image/png" 
       href="/static/foodtruck_small_360.png">
     
 
     <style>
-        h1, h2, h3, h4,h5, .navbar-brand { font-family: Arial; }
+        h1, h2, h3, h4,h5,p, .navbar-brand { font-family: "Open+Sans", Arial;
+                                          font color: #1A1A1A; 
+                                        }
+        a:active {
+          font color: #1A1A1A;
+        }
         
+        .navbar-inverse{
+          font-family: 'Open+Sans', Arial;
+          background-color:#B0E0E6;
+          font color: #E5E5E5;
+
+
+        }
+
         #homepage-title {
             margin: 0;
             top: 0.5em;
             width: 100%;
             text-align: center;
-            color: black;
+            color: #B0E0E6;
             font-weight: 400;
             font-size: 500%;
+            
         }
+
+
         html, body {
           width: 100%;
           height: 100%;
           margin: 0;
-          background-color: #F0F8FF;
+          /*Powder Blue*/
+          background-color: #B0E0E6;
+          font color: #1A1A1A;
         }
+
+
         #homepage-block {
           width: 100%;
           height: 100%;
@@ -44,21 +63,32 @@
           padding: 0;
           background-image: url("/static/generic_FT.jpg");
           background-size: 100%;
+          font color: #1A1A1A;
         }
+
+
         #my-map {
                 height: 100%;
-              }
+        }
+
         #extending {
                       margin: 0px;
                       padding: 0px;
-                      background-color: #dddddd;
+                      /*Powder Blue*/
+                      background-color: #B0E0E6;
                       width: 100%;
-                      height: 100%;
-                   }
+                      height: 100%; 
+                      font color: #1A1A1A;;
+        }
+
         .spaced {
           margin-left:20px; 
-          margin-top: 20px;
+          margin-top: 5px;
+          background: #89AEB3;
+          font color: #1A1A1A;
         }
+
+
     </style>
   <script src="https://code.jquery.com/jquery.js"></script>   
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDsAtH9vvuV5H6gSIK4pQDUnksdpcxwhuE" async defer></script>
@@ -70,33 +100,32 @@
 
 <!-- /////////////////////////////////nav bar/////////////////////////////////////////////////// -->
 
-<nav class="navbar navbar-inverse" style="margin-bottom: 0px">
+<nav class="navbar-inverse" style="margin-bottom: 0px">
     <div class="container-fluid">
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed"
+            <!-- <button type="button" class="navbar-toggle collapsed"
                     data-toggle="collapse"
                     data-target="#bs-example-navbar-collapse-1">
                 <span class="sr-only">Toggle navigation</span>
                 <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="/">FoodTruck Follower</a>
+            </button> -->
+            <ul class="nav navbar-nav navbar-left">
+              <li><a class="navbar-brand" href="/">FoodTruck Follower</a></li>
+            </ul>
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
-        <div class="collapse navbar-collapse"
-             id="bs-example-navbar-collapse-1">
-            <ul class="nav navbar-nav">
-                <!-- <li><a href="/users">View All Users</a></li>
-                <li><a href="/movies">View All Movies</a></li> -->
-            </ul>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
+
               {% if "current_user" in session %}
+                  
                   <li><a href="/users/{{ session['current_user'] }}">Profile</a></li>
                   <li><a href="/logout">Logout</a></li>
+                  
               {% else %}
+
                   <li><a href="/register">Register</a></li>
                   <li><a href="/login">Login</a></li>
               {% endif %}

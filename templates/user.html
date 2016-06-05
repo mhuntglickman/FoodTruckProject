@@ -1,27 +1,26 @@
 {% extends 'base.html' %}
 {% block content %}
-<br>
-
 <div class="well spaced" style="width:97%" id="top-level">
   <h2>{{ user.fname }} {{ user.lname }}</h2>
 
-  <b><p style="color:#9acd32">Email/Login: {{ user.email }}</p>  
+  <b><p>Email/Login: {{ user.email }}</p>  
     <!-- TO DO: Make the phone number display in a nice format -->
-  <p style="color:#9acd32">Phone: {{ user.phone }}</p></b>
+    
+  <p>Phone: {{ user.phone }}</p></b>
 
   <!-- Iterate through the trucks and display each as a link -->
-  <h2>{{ user.fname }}'s FoodTrucks</h2>
+  
 </div>
 
 
 <!-- These are trucks the user is currently following -->
 <div class="well spaced" style="width:97%" id="form-1">
- 
-  <h4>Click the link to get more details about the truck.<br>
-  To Unfollow a truck, click the checkbox.<br>
-  When you are done submit the form.</h4><br>"
+  <h5>{{ user.fname }}'s FoodTrucks</h5>
+
+  <h6>Click to Change your truck subscriptions</h6><br>
   
   <form id="update-truck-form" action="/update-trucks" method="post">
+    <legend><h6>Current Trucks</h6></legend>
     <fieldset id=watching>
     <ol>
       {% for truck in user.trucks %}
@@ -32,12 +31,8 @@
       {% endfor %}
     </ol>
   </fieldset>
-
-</div>
-
- <!-- Trucks a user not currently following -->
-<div class="well spaced" style="width:97%" id="form-1">
-    <h4>Preview trucks by clicking a link and select more trucks to follow:</h4>
+<br>
+    <legend><h6>Preview Other Trucks</h6></legend>
     <fieldset id="not-watching">
      <ul>
       {% for truck in truck_list %}
@@ -51,11 +46,14 @@
      <br>
      <br>
     <button type="button" id="btn-ser1">Submit Your Changes</button>
+  
   </form> 
-<!-- end of the form that spans 2 div's -->
+<!-- end of the form -->
 
 </div>
-
+<br>
+<br>
+<br>
 <script src="/static/js/truck-update.js"></script>
 
 {% endblock %}

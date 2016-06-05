@@ -40,6 +40,7 @@ counter = 0
 def index():
     """Homepage."""
 
+
     return render_template("homepage.html")
 
 # registration route for new users
@@ -64,7 +65,10 @@ def register_process():
     zipcode = request.form["zipcode"]
 
     # Remove hyphens from the phone number before storing in DB
-    phone = re.sub('-','',t_phone)
+    phone =  phone.replace("(","")
+    phone =  phone.replace(")","")
+    phone =  phone.replace("-","")
+
     
     # create User object for DB table users
     new_user = User(email=email, password=password, fname=fname, lname=lname, phone=phone, zipcode=zipcode)
