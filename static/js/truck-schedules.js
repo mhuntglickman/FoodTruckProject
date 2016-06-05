@@ -1,80 +1,12 @@
 "use strict";
 
-function handleLocationError(browserHasGeolocation, infoWindow, pos) {
-  infoWindow.setPosition(pos);
-  infoWindow.setContent(browserHasGeolocation ?
-                        'Error: The Geolocation service failed.' :
-                        'Error: Your browser doesn\'t support geolocation.');
-}
-
-//////////////////////////////////////////////////////////////////
-// latt, longi are the destination coordinates
-// pos are the origin geo location lat long coordinates
-
-function calculateAndDisplayRoute(directionsService, directionsDisplay, origin_latt, origin_lng, latt, longi ){
-
-    directionsService.route({
-            origin: new google.maps.LatLng(37.788633399999995, -122.4114752), // Pass this in place of the address 'Akin Ogunlewe street VI'
-            //origin: new google.maps.LatLng(origin_latt, origin_lng), // Pass this in place of the address 'Akin Ogunlewe street VI'
-            destination: new google.maps.LatLng(latt, longi), // Pass this in place of the address 'Falolu road Surulere'
-            travelMode: google.maps.TravelMode.DRIVING
-        }, function(response, status){
-
-            if (status === google.maps.DirectionsStatus.OK){
-                directionsDisplay.setDirections(response);
-            } 
-            else{
-                window.alert('Directions request failed due to ' + status);
-            }
-    
-    });
-
-}
+var browserSupportFlag, initialLocation, dest, start;
+var directionsService, directionsDisplay;
 
 
 function initMyMap(latt, longi, start_time, end_time, truck_name){
-    var directionsService = new google.maps.DirectionsService;
-    var directionsDisplay = new google.maps.DirectionsRenderer; 
-    $( document ).ready(function() {
-        console.log( "document loaded" );
-    });
-    
-
-    //Try W3C Geolocation (Preferred)
-    function initialize() {
-      var myOptions = {
-        zoom: 6,
-        mapTypeId: google.maps.MapTypeId.ROADMAP
-      };
-
-
-      var map = new google.maps.Map(document.getElementById("map"), myOptions);
-
-      // Try W3C Geolocation (Preferred)
-      if(navigator.geolocation) {
-        browserSupportFlag = true;
-        navigator.geolocation.getCurrentPosition(function(position) {
-          initialLocation = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
-          map.setCenter(initialLocation);
-        }, function() {
-          handleNoGeolocation(browserSupportFlag);
-        });
-      }
-      // Browser doesn't support Geolocation
-      else {
-        browserSupportFlag = false;
-        handleNoGeolocation(browserSupportFlag);
-      }
-
-      function handleNoGeolocation(errorFlag) {
-        if (errorFlag == true) {
-          alert("Geolocation service failed.");
-          initialLocation = sanfrancisco;
-        } 
-        map.setCenter(initialLocation);
-      }
-    }
-
+    directionsService = new google.maps.DirectionsService;
+    directionsDisplay = new google.maps.DirectionsRenderer; 
     //Create the map and set the pin based on lat and lng sent in from DB
     var map = new google.maps.Map(document.getElementById('map'), {
         center: {lat: latt, lng: longi},
@@ -87,8 +19,17 @@ function initMyMap(latt, longi, start_time, end_time, truck_name){
 
     
     });
+
+    dest = {
+        longi:longi,
+        latt:latt
+    }
+
+
+
+
     //Drop a marker for the truck
-    var marker = new google.maps.Marker({
+    var truckMarker = new google.maps.Marker({
         position: {lat: latt, lng: longi},
         map: map,
         title: truck_name + '\nHours: ' + start_time + " - "+ end_time,
@@ -96,32 +37,98 @@ function initMyMap(latt, longi, start_time, end_time, truck_name){
         
         });
 
-    var infoWindow = new google.maps.InfoWindow({map: map});
+    //var infoWindow = new google.maps.InfoWindow({map: map});
+
+    // Geolocation
+
+    console.log(navigator);
+
+    // Try W3C Geolocation (Preferred)
+    // Set up Geolocation
+
+
+      if(navigator.geolocation) {
+        browserSupportFlag = true;
+        navigator.geolocation.getCurrentPosition(function(position) {
+          initialLocation = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
+          
+        console.log('IL', initialLocation.lat(), initialLocation.lng());
+
+        start = {
+            longi:initialLocation.lng(),
+            latt:initialLocation.lat()
+        }
+
+
+
+        map.setCenter(initialLocation);
+
+        calculateAndDisplayRoute(directionsService, directionsDisplay, dest, start);
+
+        directionsDisplay.setMap(map);
+        
+
+        }, function() {
+          handleNoGeolocation(browserSupportFlag);
+        });
+      }
+      // Browser doesn't support Geolocation
+      else {
+        
+        browserSupportFlag = false;
+        handleNoGeolocation(browserSupportFlag);
+      }
+
+
+      //Rout the directions
+
+
+    
+
+
     
     
-    debugger;
-    
-    
-    // debugger;
-    // console.log(position.coords.latitude)
-    //setTimeout(function(){ alert("Hello"); }, 3000);
-    
-    $( document ).ready(function() {
-        directionsDisplay.setMap(map); 
-    });
-    $( document ).ready(function() {
-        calculateAndDisplayRoute(directionsService, directionsDisplay, latt, longi);
-    });
-  
 }
 
+// Geolcoation utility functions
+function calculateAndDisplayRoute(directionsService, directionsDisplay, dest, start){
 
+    directionsService.route({
+            // origin: new google.maps.LatLng(37.788633399999995, -122.4114752), // Pass this in place of the address 'Akin Ogunlewe street VI'
+            origin: new google.maps.LatLng(start.latt, start.longi), // Pass this in place of the address 'Akin Ogunlewe street VI'
+            destination: new google.maps.LatLng(dest.latt, dest.longi), // Pass this in place of the address 'Falolu road Surulere'
+            travelMode: google.maps.TravelMode.DRIVING
+        }, function(response, status){
 
+            console.log('resp', response, status);
+
+            if (status === google.maps.DirectionsStatus.OK){
+                console.log('good', directionsDisplay);
+                directionsDisplay.setDirections(response);
+            } 
+            else{
+                console.log('bad');
+                window.alert('Directions request failed due to ' + status);
+            }
+    
+    });
+
+}
+
+function handleNoGeolocation(errorFlag) {
+    if (errorFlag == true) {
+        alert("Geolocation service failed.");
+        initialLocation = sanfrancisco;
+    } 
+    
+    map.setCenter(initialLocation);
+}
 
 
 
 // send the event to function for evaluation
 function submitSchedule(evt) {
+    console.log('Submit Sched');
     //stop the default event
     evt.preventDefault();
 
@@ -135,6 +142,9 @@ function submitSchedule(evt) {
     	   formInputs, function (myScheduleDict)
            {
             //Immediately check to see if the object is empty
+
+            console.log('Have schedule', myScheduleDict);
+
             if(jQuery.isEmptyObject(myScheduleDict))
                 {
                     // Styling for the map div when there is no map to render.  
@@ -149,7 +159,13 @@ function submitSchedule(evt) {
                 }
             else{
                 
-                    initMyMap(myScheduleDict.lattitude, myScheduleDict.longitude, myScheduleDict.start_time, myScheduleDict.end_time, myScheduleDict.truck_name);
+                    initMyMap(
+                        myScheduleDict.lattitude, 
+                        myScheduleDict.longitude, 
+                        myScheduleDict.start_time, 
+                        myScheduleDict.end_time, 
+                        myScheduleDict.truck_name
+                        );
                 }
            });
 }// End of anonymous success function from AJAX call
