@@ -36,6 +36,10 @@ class CustomJSONEncoder(JSONEncoder):
 app.json_encoder = CustomJSONEncoder
 counter = 0
 
+
+
+
+#########################################################
 # default route
 @app.route('/')
 def index():
@@ -44,6 +48,8 @@ def index():
 
     return render_template("homepage.html")
 
+
+#########################################################
 # registration route for new users
 @app.route('/register', methods=['GET'])
 def register_form():
@@ -52,6 +58,28 @@ def register_form():
     return render_template("register_form.html")
 
 
+#########################################################################
+# The generic route to show the users trucks 
+# and the trucks they follow
+@app.route("/truck_list")
+def user_truck_detail():
+    """Show the user page."""
+
+    # query the db for the user object and pass through to 
+    # to the user.html jinja template for display
+    # because of the ORM this includes the truck info for trucks user followers
+    # example:  for item in user.trucks:
+    #           truck_id    name
+    #           4           El Gondo
+    #           6           Drums & Crumbs  
+
+    user_id = session.get("current_user")
+    user = User.query.get(user_id)
+
+    return render_template("truck_list.html", user=user )
+
+
+###########################################################
 # Route for getting the form entries and creating new user
 @app.route('/register-process', methods=['POST'])
 def register_process():

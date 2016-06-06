@@ -3,10 +3,6 @@
 
 
 <div class="well spaced" style="width:95%;">
-<!-- <div class="row">-->
-<!-- <div class="col-xs-12 col-lg-6"> -->
-
-
 <!-- start -->
 
 <div id="exTab1" class="container"> 
@@ -18,8 +14,6 @@
       </li>
       <li><a href="#3a" data-toggle="tab">Tweets</a>
       </li>
-<!--       <li><a href="#4a" data-toggle="tab">Background color</a>
-      </li> -->
     </ul>
 
       <div class="tab-content clearfix">
@@ -44,7 +38,7 @@
               <div id="yelp">
                 
 
-                <a href="{{ truck.yelp_link }}"> 
+                <a href="{{ truck.yelp_link }}" target="_blank"> 
                 <img src="/static/yelp_btn/yelp_review_btn_red@3x.png" alt="{{ truck.name }} yelp" style="width:205px;height:40px;border:0;">
                 </a>
 
@@ -109,9 +103,7 @@
               
                 </div>
         </div>
-<!--           <div class="tab-pane" id="4a">
-          <h3>We use css to change the background color of the content to be equal to the tab</h3>
-        </div> -->
+
       </div>
   </div>
 
@@ -119,72 +111,6 @@
 
 
 <!-- stop -->
-
-
-<!-- dispaly the truck name at the top -->
-<!-- <h1>{{ truck.name }}</h1>
- -->
-
-    
-<!--       <div id="web">
-        
-        <a href="{{ truck.web_link }}"> 
-        <img src="/static/foodtruck_small.png" alt="{{ truck.name }} web site" style="width:45px;height:45px;border:0;">
-        </a><span style="color:black">Get the full 411 from your truck.</span>
-
-
-      </div> <!--END OF THE WEB DIV  -->
-      
-<!--       <div id="yelp">
-        
-
-        <a href="{{ truck.yelp_link }}"> 
-        <img src="/static/yelp_btn/yelp_review_btn_red@3x.png" alt="{{ truck.name }} yelp" style="width:205px;height:40px;border:0;">
-        </a>
-
-      </div> -->
-
-      <!--END OF THE YELP DIV  -->
-
-
-<!--       <div id="calendars">
-        <form id="display-schedule" >
-          Schedule:
-          <input type="date" id="day">
-          <input type="hidden" id="truck-id" value="{{ truck.truck_id }}">
-          <input type="submit">
-          
-        </form>
-      </div>
- -->
-
-
-      <!--END OF THE CALENDARS DIV  -->
-   
-    
-    <!-- <div class="col-xs-12 col-lg-6" > ">-->
-<!--       <div id="map" style="height:350px; width:40%;"> </div>
- -->      <!--END OF THE MAP DIV  -->
-   <!-- </div> -->
-
-<!--     <div id='timeline'> 
-
-      <a class="twitter-timeline" href="{{ truck.twitter_handle }}" data-widget-id="{{ truck.widget_id }}">Tweets by @{{ truck.twitter_handle }}</a>
-        
-    <script>
-    !function(d,s,id){
-        var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';
-        if(!d.getElementById(id))
-          {js=d.createElement(s);
-          js.id=id;js.src=p+"://platform.twitter.com/widgets.js";
-          fjs.parentNode.insertBefore(js,fjs);
-          }
-        }(document,"script","twitter-wjs");
-    </script>
-  
-    </div> -->
-
-    <!--END OF THE TIMELINE DIV  -->
 
 <script src="/static/js/truck-schedules.js"></script>
 

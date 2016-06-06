@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<!-- These are trucks the user is currently following -->
+<div class="well spaced" style="width:97%" >
+  <h5>{{ user.fname }}'s FoodTrucks</h5>
+    <ul>
+      {% for truck in user.trucks %}
+      
+        <li class="user-trucks">
+       		<a href="/trucks/{{ truck.truck_id }}">{{ truck.name}}</a> 
+        </li>
+
+      {% endfor %}
+
+  
+{% endblock %}
