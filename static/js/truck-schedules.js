@@ -1,14 +1,14 @@
 "use strict";
 
 var browserSupportFlag, initialLocation, dest, start;
-var directionsService, directionsDisplay;
+var map, directionsService, directionsDisplay;
 
 
 function initMyMap(latt, longi, start_time, end_time, truck_name){
     directionsService = new google.maps.DirectionsService;
     directionsDisplay = new google.maps.DirectionsRenderer; 
     //Create the map and set the pin based on lat and lng sent in from DB
-    var map = new google.maps.Map(document.getElementById('map'), {
+        map = new google.maps.Map(document.getElementById('map'), {
         center: {lat: latt, lng: longi},
         zoom: 14,
         mapTypeControl: true,
@@ -19,6 +19,8 @@ function initMyMap(latt, longi, start_time, end_time, truck_name){
 
     
     });
+
+    $("#get-directions").show();
 
     dest = {
         longi:longi,
@@ -47,37 +49,37 @@ function initMyMap(latt, longi, start_time, end_time, truck_name){
     // Set up Geolocation
 
 
-      if(navigator.geolocation) {
-        browserSupportFlag = true;
-        navigator.geolocation.getCurrentPosition(function(position) {
-          initialLocation = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
+      // if(navigator.geolocation) {
+      //   browserSupportFlag = true;
+      //   navigator.geolocation.getCurrentPosition(function(position) {
+      //     initialLocation = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
           
-        console.log('IL', initialLocation.lat(), initialLocation.lng());
+      //   console.log('IL', initialLocation.lat(), initialLocation.lng());
 
-        start = {
-            longi:initialLocation.lng(),
-            latt:initialLocation.lat()
-        }
+      //   start = {
+      //       longi:initialLocation.lng(),
+      //       latt:initialLocation.lat()
+      //   }
 
 
 
-        map.setCenter(initialLocation);
+      //   //map.setCenter(initialLocation);
 
-        calculateAndDisplayRoute(directionsService, directionsDisplay, dest, start);
+      //   //calculateAndDisplayRoute(directionsService, directionsDisplay, dest, start);
 
-        directionsDisplay.setMap(map);
+      //   //directionsDisplay.setMap(map);
+
+
+      //   }, function() {
+      //     handleNoGeolocation(browserSupportFlag);
+      //   });
+      // }
+      // // Browser doesn't support Geolocation
+      // else {
         
-
-        }, function() {
-          handleNoGeolocation(browserSupportFlag);
-        });
-      }
-      // Browser doesn't support Geolocation
-      else {
-        
-        browserSupportFlag = false;
-        handleNoGeolocation(browserSupportFlag);
-      }
+      //   browserSupportFlag = false;
+      //   handleNoGeolocation(browserSupportFlag);
+      // }
 
 
       //Rout the directions
@@ -127,15 +129,24 @@ function handleNoGeolocation(errorFlag) {
 
 
 // send the event to function for evaluation
-function submitSchedule(evt) {
-    console.log('Submit Sched');
-    //stop the default event
-    evt.preventDefault();
+function submitSchedule() {
 
+    $("#get-directions").hide();
+    console.log('Submit Sched', moment().format("YYYY-MM-DD"));
+    //stop the default event
+
+    var day;
+
+    console.log('day', $("#day").val())
+    
     var formInputs = {
-        "day": $("#day").val(),
+        "day": $("#day").val() == "" ? moment().format("YYYY-MM-DD") : $("#day").val(),
         "truck_id": $("#truck-id").val()
     };
+
+
+    console.log('Form:', formInputs);
+
     
     
     $.get("/truck_schedule", 
@@ -171,11 +182,63 @@ function submitSchedule(evt) {
 }// End of anonymous success function from AJAX call
 
 
+function getDirections(){
+
+    if(navigator.geolocation) {
+        browserSupportFlag = true;
+        navigator.geolocation.getCurrentPosition(function(position) {
+          initialLocation = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
+          
+        console.log('IL', initialLocation.lat(), initialLocation.lng());
+
+        start = {
+            longi:initialLocation.lng(),
+            latt:initialLocation.lat()
+        }
+
+        console.log('Params:', dest, start);
+
+        map.setCenter(initialLocation);
+
+        calculateAndDisplayRoute(directionsService, directionsDisplay, dest, start);
+
+        directionsDisplay.setMap(map);
+
+
+
+
+        }, function() {
+          handleNoGeolocation(browserSupportFlag);
+        });
+      }
+      // Browser doesn't support Geolocation
+      else {
+        
+        browserSupportFlag = false;
+        handleNoGeolocation(browserSupportFlag);
+      }
+
+
+
+
+}
+
 //////////////////////////////////////////////////////////////////////////////
 // Click event button for truck.html
 // 
-$("#display-schedule").on("submit", submitSchedule);
+// $("#display-schedule").on("submit", submitSchedule);
+
+$("#schedule-search").on("click", submitSchedule);
+$("#schedule-search-now").on("click", submitSchedule);
+
+$("#get-directions").hide();
+$("#get-directions").on("click", getDirections);
 
 
+// $( document ).ready(function() {
+//   // Handler for .ready() called.
+//   submitSchedule();
+
+// });
 
 

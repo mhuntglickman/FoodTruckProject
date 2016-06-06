@@ -10,9 +10,11 @@
 function AddBackHTML(divName, truck_names=[], truck_ids=[])
 {
   
-  // document.getElementById(divName).innerHTML +="<ul style="list-style-type:disc">";
+  //document.getElementById(divName).innerHTML +="<ul>";
 
+  var newhtml = "";
 
+  newhtml += "<ul>";
   ////////////////////////////////////////////////////////////////////
   // iterate over the list of items to build and use the buildHTML() to 
   // insert each one into the div
@@ -21,38 +23,59 @@ function AddBackHTML(divName, truck_names=[], truck_ids=[])
 
 
     //build a string to with the result lists
-    var Add_In = "<a href=\"/trucks/" + truck_ids[i] + "\"> " + truck_names[i] + "  </a>";
-    document.getElementById(divName).innerHTML += Add_In;
+    newhtml += "<li class=\"user-item-list\"><span><a href=\"/trucks/" + truck_ids[i] + "\"> " + truck_names[i] + "  </a>";
+    //var Add_In = "<span><a href=\"/trucks/" + truck_ids[i] + ">" + truck_names[i] + "</a>";
+    //document.getElementById(divName).innerHTML += Add_In;
     
 
     /////////////////////////////////////////////////////////
     // each new a href also requires a checkbox be created 
-    Add_In = "<input type=\"checkbox\" name=\"" + truck_ids[i] + "\"><br>";
-    
+    //Add_In = "<input type=\"checkbox\" name=\"" + truck_ids[i] + "\"><br>";
+    if (divName == 'watching'){
+    newhtml += "<button type=\"button\" name="  + truck_ids[i] +  " class=\"btn btn-danger btn-xs button-space remove-truck\">Remove Me!</button></span></li>";
 
     //TO DO: take out before career day.  Striclty for debugging purposes.
-    console.log(Add_In);
+    //console.log(Add_In);
     //debugger;
 
-    document.getElementById(divName).innerHTML +=Add_In;
-  
+    //document.getElementById(divName).innerHTML +=Add_In;
+    }
+    else{
+
+      newhtml += "<button type=\"button\" name="  + truck_ids[i] +  " class=\"btn btn-default btn-xs button-space add-truck\">Add Me!</button></span></li>";
+
+     //TO DO: take out before career day.  Striclty for debugging purposes.
+      //console.log(Add_In);
+      //debugger;
+
+      //document.getElementById(divName).innerHTML +=Add_In;
+    }
+
   } //End of for loop
   
-  console.log(Add_In);
-  document.getElementById(divName).innerHTML +="<ul>";
+
+  newhtml += "</ul>"
+
+  document.getElementById(divName).innerHTML = newhtml;
 
 
 }
 
 // send the event to function for evaluation
-function submitTrucks(evt) {
+function submitTrucks(truck_id) {
     
     //stop the default 'submit' event
-    evt.preventDefault();
+    //evt.preventDefault();
 
-    var truck_array = $("#update-truck-form").serialize();
+    // var truck_array = $("#update-truck-form").serialize();
 
-    $.post("/update-trucks", truck_array, function (results)
+    console.log('Do Update',truck_id )
+
+    var tdata = {
+      tid: truck_id
+    }
+    
+    $.post("/update-trucks", tdata, function (results)
            {
            	  
               /////////////////////////////////////////
@@ -89,9 +112,19 @@ function submitTrucks(evt) {
            });
 }// End of anonymous success function from AJAX call
 
+function alterTrucks(event){
+
+  console.log('Truck', event.target.name);
+
+  submitTrucks(event.target.name);
+}
 
 ///////////////////////////////////
 // Click event button for user.html
 // 
 $("#btn-ser1").click(submitTrucks);
+
+$(".add-truck").click(alterTrucks);
+$(".remove-truck").click(alterTrucks);
+
 

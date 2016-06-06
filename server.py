@@ -15,6 +15,7 @@ import re
 import pdb
 
 
+
 app = Flask(__name__)
 
 # Required to use Flask sessions and the debug toolbar
@@ -201,6 +202,13 @@ def change_trucks():
     # send back the new list of trucks they are either following or not following
 
     #intialize the dictionary needed to send back info through json
+    print "?????????????????????????????????????????????????????"
+    print("Request Form:",request.form.get('tid'))
+    print "?????????????????????????????????????????????????????"
+    print "?????????????????????????????????????????????????????"
+    truck = request.form.get('tid')
+    
+
     my_dict = {'trucks': {'name':[],
                            'truck_id':[]
                            },
@@ -210,7 +218,7 @@ def change_trucks():
                }
     
     # example output: [('8', u'on'), ('4', u'on'), ('7', u'on'), ('6', u'on')]
-    truck_list = request.form.items()
+    # truck_list = request.form.items()
     
     
 
@@ -220,30 +228,30 @@ def change_trucks():
     # grab the user_id from session
     user_id = session.get("current_user")
    
-    for truck in truck_list:
+    # for truck in truck_list:
         # I don't like asking for '.all' because in reality this should be 
         # a '.one' as it is an association table.  However when no
         # record is returned Alchemy does not raise a 'No Result Found' error
         # therefore only work around is to use the '.all' and then 
         # test for an empty response query. 5/26/2016
-        result1 = db.session.query(User_Truck).filter_by(user_id=user_id, truck_id=truck[0]).first()
+    result1 = db.session.query(User_Truck).filter_by(user_id=user_id, truck_id=truck).first()
         
         # if a record is found then delete it
-        if result1:
-            print "***********************************"
-            print result1.truck_id, result1.user_id
-            print "***********************************"
-            print "***********************************"
-            db.session.delete(result1)
-            db.session.commit()
-        # else no record create one
-        else:
-            # Reptative but for the moment it is working 
-            # best method would be add them all to the session and commit once 6/26/2016
-            new_item = User_Truck(user_id=user_id,truck_id=truck[0])
-            db.session.add(new_item)
-            db.session.commit()
-        #end of if 
+    if result1:
+        # print "***********************************"
+        # print result1.truck_id, result1.user_id
+        # print "***********************************"
+        # print "***********************************"
+        db.session.delete(result1)
+        db.session.commit()
+    # else no record create one
+    else:
+        # Reptative but for the moment it is working 
+        # best method would be add them all to the session and commit once 6/26/2016
+        new_item = User_Truck(user_id=user_id,truck_id=truck)
+        db.session.add(new_item)
+        db.session.commit()
+    #end of if 
 
     #end of for loop
 
@@ -280,6 +288,7 @@ def change_trucks():
         my_dict['other_trucks']['name'].append(truck.name)
         my_dict['other_trucks']['truck_id'].append(truck.truck_id)    
 
+   
 
     # TO DO: jsonify the returned set of objects from the two db queries and send them back to the 
     # AJAX route
@@ -301,12 +310,15 @@ def truck_detail(truck_id):
 
     # This was for debugging 
     truck = Truck.query.get(truck_id)
+    # day = time.strftime("%Y/%m/%d")
+    day = "2016/06/03"
+    mySchedule = Schedule.query.filter_by(truck_id=truck_id, day=day).first()
     # print "********************************"
     # print truck.name
     # print truck.yelp_link
     # print"*********************************"
 
-    return render_template("truck.html", truck=truck)
+    return render_template("truck.html", truck=truck, mySchedule=mySchedule)
 
 
 #########################################################################
@@ -342,6 +354,8 @@ def display_schedule():
     # if the db returns a record then jsonify needed attributes and return to javascript
     if mySchedule:
         myScheduleDict = {
+            'street_address': mySchedule.location.street_address,
+            'city': mySchedule.location.city,
             'longitude': mySchedule.location.longitude, 
             'lattitude': mySchedule.location.lattitude,
             'start_time': mySchedule.start_time,

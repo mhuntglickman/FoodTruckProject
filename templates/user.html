@@ -5,7 +5,7 @@
 
   <b><p>Email/Login: {{ user.email }}</p>  
     <!-- TO DO: Make the phone number display in a nice format -->
-    
+
   <p>Phone: {{ user.phone }}</p></b>
 
   <!-- Iterate through the trucks and display each as a link -->
@@ -21,31 +21,41 @@
   
   <form id="update-truck-form" action="/update-trucks" method="post">
     <legend><h6>Current Trucks</h6></legend>
-    <fieldset id=watching>
-    <ol>
+    <fieldset id="watching">
+    
+    <ul>
+      
       {% for truck in user.trucks %}
-        <li>
-        <a href="/trucks/{{ truck.truck_id }}">{{ truck.name}}</a> 
-        <input type="checkbox" name="{{truck.truck_id}}"><br>
-      </li>
+      
+        <li class="user-item-list">
+          <span>
+            <a href="/trucks/{{ truck.truck_id }}">{{ truck.name}}</a> 
+          <button type="button" name="{{truck.truck_id}}" class="btn btn-danger btn-xs button-space remove-truck">Remove Me!</button>
+        </span>
+        </li>
+
       {% endfor %}
-    </ol>
+
+    </ul>
   </fieldset>
 <br>
     <legend><h6>Preview Other Trucks</h6></legend>
     <fieldset id="not-watching">
      <ul>
       {% for truck in truck_list %}
-        <li>
-        <a href="/trucks/{{ truck.truck_id }}">{{ truck.name}}</a> 
-        <input type="checkbox" name="{{truck.truck_id}}"><br>
+
+        <li class="user-item-list">
+          <span> 
+            <a href="/trucks/{{ truck.truck_id }}">{{ truck.name}}</a> 
+          <button type="button" name="{{truck.truck_id}}" class="btn btn-default btn-xs button-space add-truck">Add Me!</button>
+        </span>
         </li>  
       {% endfor %}
      </ul>
     </fieldset>
      <br>
      <br>
-    <button type="button" id="btn-ser1">Submit Your Changes</button>
+    <!-- <button type="button" id="btn-ser1">Submit Your Changes</button> -->
   
   </form> 
 <!-- end of the form -->

@@ -2,7 +2,7 @@
 {% block content %}
 
 
-<div class="well spaced" style="width:100%;">
+<div class="well spaced" style="width:95%;">
 <!-- <div class="row">-->
 <!-- <div class="col-xs-12 col-lg-6"> -->
 
@@ -12,32 +12,108 @@
 <div id="exTab1" class="container"> 
 <ul  class="nav nav-pills">
       <li class="active">
-        <a  href="#1a" data-toggle="tab">Overview</a>
+        <a  href="#1a" data-toggle="tab">{{ truck.name }}</a>
       </li>
-      <li><a href="#2a" data-toggle="tab">Using nav-pills</a>
+      <li><a href="#2a" data-toggle="tab">Map</a>
       </li>
-      <li><a href="#3a" data-toggle="tab">Applying clearfix</a>
+      <li><a href="#3a" data-toggle="tab">Tweets</a>
       </li>
-      <li><a href="#4a" data-toggle="tab">Background color</a>
-      </li>
+<!--       <li><a href="#4a" data-toggle="tab">Background color</a>
+      </li> -->
     </ul>
 
       <div class="tab-content clearfix">
         <div class="tab-pane active" id="1a">
-          <h3>Content's background color is the same for the tab</h3>
+          <div>
+              <h1>{{ truck.name }} </h1>
+              <div><p>{{ truck.descrip }}</p></div>
+
+              <div><p>We're at {{mySchedule.location.street_address}} in {{mySchedule.location.city}} right now!</p></div> 
+
+              <div id="web">
+        
+                <a href="{{ truck.web_link }}" target="_blank"> 
+                  <img src="/static/foodtruck_small.png" alt="{{ truck.name }} web site" style="width:45px;height:45px;border:0;">
+                </a>
+                <span style="color:black">Check out {{ truck.name }} website!</span>
+
+
+              </div> <!--END OF THE WEB DIV  -->
+
+
+              <div id="yelp">
+                
+
+                <a href="{{ truck.yelp_link }}"> 
+                <img src="/static/yelp_btn/yelp_review_btn_red@3x.png" alt="{{ truck.name }} yelp" style="width:205px;height:40px;border:0;">
+                </a>
+
+              </div><!--END OF THE YELP DIV  -->
+
+
+
+          </div>
         </div>
+
         <div class="tab-pane" id="2a">
-          <h3>We use the class nav-pills instead of nav-tabs which automatically creates a background color for the tab</h3>
+          <div id="calendars">
+
+              <div class="row">
+                <div class="col-md-6">
+                  <form>
+                    <div class="form-group whereami">
+                      <div id="schedule-search-now" class="btn btn-default">Where is {{truck.name}} now?</div>
+                    </div>
+
+                    <div class="form-group">
+                      <label for="exampleInputEmail1">Search upcoming dates:</label>
+                      <input type="date" class="form-control" id="day" placeholder="Search Date..">
+                      <input type="hidden" id="truck-id" value="{{ truck.truck_id }}">
+                    </div>
+
+                    <div class="form-group">
+                      <div id="schedule-search" class="btn btn-primary">Search</div>
+                      <div id="get-directions" class="btn btn-primary">Give Me Directions!</div>
+                    </div>
+
+                  </form>
+
+
+                </div>
+              </div>
+
+
+            </div>
+
+              <div id="map" style="height:350px;"> </div>
         </div>
+
+
+
         <div class="tab-pane" id="3a">
-          <h3>We applied clearfix to the tab-content to rid of the gap between the tab and the content</h3>
+
+                <div id='timeline'> 
+
+                  <a class="twitter-timeline" href="{{ truck.twitter_handle }}" data-widget-id="{{ truck.widget_id }}">Tweets by @{{ truck.twitter_handle }}</a>
+                    
+                <script>
+                !function(d,s,id){
+                    var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';
+                    if(!d.getElementById(id))
+                      {js=d.createElement(s);
+                      js.id=id;js.src=p+"://platform.twitter.com/widgets.js";
+                      fjs.parentNode.insertBefore(js,fjs);
+                      }
+                    }(document,"script","twitter-wjs");
+                </script>
+              
+                </div>
         </div>
-          <div class="tab-pane" id="4a">
+<!--           <div class="tab-pane" id="4a">
           <h3>We use css to change the background color of the content to be equal to the tab</h3>
-        </div>
+        </div> -->
       </div>
   </div>
-
 
 <hr></hr>
 
@@ -46,11 +122,11 @@
 
 
 <!-- dispaly the truck name at the top -->
-<h1>{{ truck.name }}</h1>
-
+<!-- <h1>{{ truck.name }}</h1>
+ -->
 
     
-      <div id="web">
+<!--       <div id="web">
         
         <a href="{{ truck.web_link }}"> 
         <img src="/static/foodtruck_small.png" alt="{{ truck.name }} web site" style="width:45px;height:45px;border:0;">
@@ -59,17 +135,19 @@
 
       </div> <!--END OF THE WEB DIV  -->
       
-      <div id="yelp">
+<!--       <div id="yelp">
         
 
         <a href="{{ truck.yelp_link }}"> 
         <img src="/static/yelp_btn/yelp_review_btn_red@3x.png" alt="{{ truck.name }} yelp" style="width:205px;height:40px;border:0;">
         </a>
 
-      </div><!--END OF THE YELP DIV  -->
+      </div> -->
+
+      <!--END OF THE YELP DIV  -->
 
 
-      <div id="calendars">
+<!--       <div id="calendars">
         <form id="display-schedule" >
           Schedule:
           <input type="date" id="day">
@@ -77,14 +155,19 @@
           <input type="submit">
           
         </form>
-      </div><!--END OF THE CALENDARS DIV  -->
+      </div>
+ -->
+
+
+      <!--END OF THE CALENDARS DIV  -->
    
     
     <!-- <div class="col-xs-12 col-lg-6" > ">-->
-      <div id="map" style="height:350px; width:40%;"> </div><!--END OF THE MAP DIV  -->
+<!--       <div id="map" style="height:350px; width:40%;"> </div>
+ -->      <!--END OF THE MAP DIV  -->
    <!-- </div> -->
 
-    <div id='timeline'> 
+<!--     <div id='timeline'> 
 
       <a class="twitter-timeline" href="{{ truck.twitter_handle }}" data-widget-id="{{ truck.widget_id }}">Tweets by @{{ truck.twitter_handle }}</a>
         
@@ -99,7 +182,9 @@
         }(document,"script","twitter-wjs");
     </script>
   
-    </div><!--END OF THE TIMELINE DIV  -->
+    </div> -->
+
+    <!--END OF THE TIMELINE DIV  -->
 
 <script src="/static/js/truck-schedules.js"></script>
 
