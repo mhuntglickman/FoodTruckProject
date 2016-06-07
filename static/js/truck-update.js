@@ -122,7 +122,7 @@ function alterTrucks(event){
 ///////////////////////////////////
 // Click event button for user.html
 // 
-$("#form-1").on(function(evt) {
+$("#form-1").click(function(evt){
 
   $(".add-truck").click(alterTrucks);
   $(".remove-truck").click(alterTrucks);

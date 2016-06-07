@@ -22,17 +22,10 @@
               <h1>{{ truck.name }} </h1>
               <div><h5><p>{{ truck.descrip }}</p></h5></div>
 
-              <div id="schedule-toggle" style="visibility: hidden">
+              <div id="schedule-toggle" >
                 <h5><p>We're at {{mySchedule.location.street_address}} in {{mySchedule.location.city}} right now!</h5></p>
               </div> 
-              
-              <script>
-                if (mySchedule.location.street_address != None){
-                  $("#schedule-toggle").show(fast);
-
-                }
-
-              </script>
+             
               
               <div id="web">
                 <h5>

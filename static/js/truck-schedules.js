@@ -28,67 +28,22 @@ function initMyMap(latt, longi, start_time, end_time, truck_name){
     }
 
 
-
+    // if (end_time >"12:00:00"){
+    //   end_time = end_time - "12:00:00";
+    //   console.log(end_time);
+    // }
 
     //Drop a marker for the truck
     var truckMarker = new google.maps.Marker({
         position: {lat: latt, lng: longi},
         map: map,
         title: truck_name + '\nHours: ' + start_time + " - "+ end_time,
-        icon: 'http://imageshack.com/a/img924/7348/BZGR4q.png'
+        icon: '/static/foodTruck_MapIcon.png'
         
         });
 
-    //var infoWindow = new google.maps.InfoWindow({map: map});
-
-    // Geolocation
-
-    console.log(navigator);
-
-    // Try W3C Geolocation (Preferred)
-    // Set up Geolocation
-
-
-      // if(navigator.geolocation) {
-      //   browserSupportFlag = true;
-      //   navigator.geolocation.getCurrentPosition(function(position) {
-      //     initialLocation = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
-          
-      //   console.log('IL', initialLocation.lat(), initialLocation.lng());
-
-      //   start = {
-      //       longi:initialLocation.lng(),
-      //       latt:initialLocation.lat()
-      //   }
-
-
-
-      //   //map.setCenter(initialLocation);
-
-      //   //calculateAndDisplayRoute(directionsService, directionsDisplay, dest, start);
-
-      //   //directionsDisplay.setMap(map);
-
-
-      //   }, function() {
-      //     handleNoGeolocation(browserSupportFlag);
-      //   });
-      // }
-      // // Browser doesn't support Geolocation
-      // else {
-        
-      //   browserSupportFlag = false;
-      //   handleNoGeolocation(browserSupportFlag);
-      // }
-
-
-      //Rout the directions
-
-
-    
-
-
-    
+    //Debugging  
+    //console.log(navigator); 
     
 }
 
@@ -102,14 +57,17 @@ function calculateAndDisplayRoute(directionsService, directionsDisplay, dest, st
             travelMode: google.maps.TravelMode.DRIVING
         }, function(response, status){
 
-            console.log('resp', response, status);
+            //Debugging
+            //console.log('resp', response, status);
 
             if (status === google.maps.DirectionsStatus.OK){
                 console.log('good', directionsDisplay);
                 directionsDisplay.setDirections(response);
             } 
             else{
-                console.log('bad');
+
+                //Debugging
+                //console.log('bad');
                 window.alert('Directions request failed due to ' + status);
             }
     
@@ -196,7 +154,8 @@ function getDirections(){
             latt:initialLocation.lat()
         }
 
-        console.log('Params:', dest, start);
+        //Debuggin
+        //console.log('Params:', dest, start);
 
         map.setCenter(initialLocation);
 
