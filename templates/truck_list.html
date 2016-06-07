@@ -4,7 +4,8 @@
 
 <!-- These are trucks the user is currently following -->
 <div class="well spaced" style="width:97%" >
-  <h5>{{ user.fname }}'s FoodTrucks</h5>
+  <h4>{{ user.fname }}'s FoodTrucks</h4>
+  <h5>
     <ul>
       {% for truck in user.trucks %}
       
@@ -13,6 +14,6 @@
         </li>
 
       {% endfor %}
-
+    </h5>
   
 {% endblock %}

@@ -3,10 +3,10 @@
 <div class="well spaced" style="width:97%" id="top-level">
   <h2>{{ user.fname }} {{ user.lname }}</h2>
 
-  <b><p>Email/Login: {{ user.email }}</p>  
+  <h5><p>Email/Login: {{ user.email }}</p></h5>
     <!-- TO DO: Make the phone number display in a nice format -->
 
-  <p>Phone: {{ user.phone }}</p></b>
+  <h5><p>Phone: {{ user.phone }}</h5></p></b>
 
   <!-- Iterate through the trucks and display each as a link -->
   
@@ -15,12 +15,13 @@
 
 <!-- These are trucks the user is currently following -->
 <div class="well spaced" style="width:97%" id="form-1">
-  <h5>{{ user.fname }}'s FoodTrucks</h5>
+  <h3>{{ user.fname }}'s FoodTrucks</h3>
 
-  <h6>Click to Change your truck subscriptions</h6><br>
+  <h5>Click to Change your truck subscriptions</h5><br>
   
   <form id="update-truck-form" action="/update-trucks" method="post">
-    <legend><h6>Current Trucks</h6></legend>
+    <legend><h5>Current Trucks</h5></legend>
+    <h5>
     <fieldset id="watching">
     
     <ul>
@@ -59,7 +60,7 @@
   
   </form> 
 <!-- end of the form -->
-
+</h5>
 </div>
 <br>
 <br>

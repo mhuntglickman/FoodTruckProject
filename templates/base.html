@@ -6,12 +6,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Food Truck Followers</title>
+    <title>Food Truck Follower</title>
 
     <!-- Bootstrap -->
     <link href="//maxcdn.bootstrapcdn.com/bootswatch/3.3.4/cyborg/bootstrap.min.css"
           rel="stylesheet">
-    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,400italic,600,300italic,700' rel='stylesheet' type='text/css'>
 
     <link rel="icon" 
       type="image/png" 
@@ -19,12 +19,13 @@
     
 
     <style>
-        h1, h2, h3, h4,h5, .navbar-brand { font-family: "Open+Sans", Arial;
-                                            color: #e8e9e7; 
+        h1, h2, h3, h4,h5,h6 { font-family: 'Open Sans', sans-serif;
+                                     color: #e8e9e7; 
                                         }
+        /*Link text colors*/
         a:active {
           color: #1A1A1A;
-          font-size: 16px;
+          
         }
 
         a:visited {
@@ -32,11 +33,17 @@
           
         }
 
-        p, label {
-                    
-                    color: #131415; 
+        /*Button on the map page to find the truck today if there is a schedule*/
+        #schedule-search-now{
+
 
         }
+        
+        p, label {
+          color: #131415; 
+
+        }
+        
         .user-item-list{
           padding: 3px;
         }
@@ -46,21 +53,22 @@
         }
         
         .navbar-inverse{
-          font-family: 'Open+Sans', Arial;
-          background-color:#B0E0E6;
-          color: #E5E5E5;
+          font-family: 'Open Sans', sans-serif;
+          background-color:#d8d8d8 ;
+          font-size: 18px;
+          
 
-
+          
         }
 
         #homepage-title {
-            margin: 0;
-            top: 0.5em;
-            width: 100%;
-            text-align: center;
-            color: #B0E0E6;
-            font-weight: 400;
-            font-size: 500%;
+          margin: 0;
+          top: 0.5em;
+          width: 100%;
+          text-align: center;
+          color: #B0E0E6;
+          font-weight: 400;
+          font-size: 500%;
             
         }
 
@@ -71,11 +79,11 @@
           margin: 0;
           /*Powder Blue*/
           background-color: #B0E0E6;
-          color: #1A1A1A;
+          /*color: #1A1A1A;*/
         }
 
         .whereami{
-          margin-top: 5px;
+          margin-top: 8px;
         }
 
 
@@ -86,7 +94,7 @@
           padding: 0;
           background-image: url("/static/generic_FT.jpg");
           background-size: 100%;
-          color: #1A1A1A;
+  /*        color: #1A1A1A;*/
         }
 
 
@@ -95,13 +103,13 @@
         }
 
         #extending {
-                      margin: 0px;
-                      padding: 0px;
-                      /*Powder Blue*/
-                      background-color: #B0E0E6;
-                      width: 100%;
-                      height: 100%; 
-                      color: #1A1A1A;;
+                    margin: 0px;
+                    padding: 0px;
+                    /*Powder Blue*/
+                    background-color: #B0E0E6;
+                    width: 100%;
+                    height: 100%; 
+                    color: #1A1A1A;;
         }
 
         .spaced {
@@ -125,14 +133,17 @@
 
 
 
-<!-- /////////////////////////////////nav bar/////////////////////////////////////////////////// -->
 
-<nav class="navbar-inverse" style="margin-bottom: 0px">
+<!-- ///////////////////////////////nav bar/////////////////////////////////////////// -->
+
+<nav class="navbar-inverse" style="margin-bottom: 0px" >
     <div class="container-fluid">
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
             <ul class="nav navbar-nav navbar-left">
-              <li><a class="navbar-brand" href="/truck_list">Show Me The Trucks</a></li>
+            {% if "current_user" in session %}
+              <li ><a href="/truck_list" >Show Me My Trucks</a></li>
+            {% endif %}
             </ul>
         </div>
 
@@ -158,7 +169,7 @@
     </div>
     <!-- /.container-fluid -->
 </nav>
-<!-- /////////////////////////////////nav bar end/////////////////////////////////////////////////// -->
+<!--////////////////////////nav bar end//////////////////////////////////////////// -->
 
 <!-- /////////////////////////////////extending/////////////////////////////////////////////////// -->
 <div id="extending">
