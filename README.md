@@ -1,2 +1,4 @@
-![Food Truck Followers Demo](https://github.com/mhuntglickman/FoodTruckProject/FoodTruckFollower.gif)
-
+:boom:
+![Food Truck Followers Demo]
+(https://github.com/mhuntglickman/FoodTruckProject/FoodTruckFollower.gif)
+:boom:
